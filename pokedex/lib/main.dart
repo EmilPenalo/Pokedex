@@ -2,7 +2,7 @@ import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/pages/pokemon_list.dart';
 
-import 'assets/HomePageHeader/favoritesActionButton.dart';
+import 'assets/HomePageHeader/favorites_action_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,9 +34,14 @@ class HomePage extends StatelessWidget {
       headerWidget: headerWidget(context),
       headerBottomBar: headerBottomBarWidget(),
       body: const [
+
         Text("Search Bar"),
+
         Text("Filter Assets"),
+
+        // Listado principal
         PokemonList()
+
       ],
       backgroundColor: Colors.grey[50],
       appBarColor: Colors.blue,
@@ -49,7 +54,9 @@ class HomePage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+
         favoritesActionButton()
+
       ],
     );
   }
