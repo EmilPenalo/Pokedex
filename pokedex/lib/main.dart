@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/pages/pokemon_list.dart';
 
 import 'assets/HomePageHeader/favorites_action_button.dart';
+import 'assets/HomePageHeader/header_widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,34 +49,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Row headerBottomBarWidget() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-
-        favoritesActionButton()
-
-      ],
-    );
-  }
-
-  Widget headerWidget(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: Center(
-        child: Text(
-          "POKEDEX",
-          style: Theme
-              .of(context)
-              .textTheme
-              .displayMedium!
-              .copyWith(color: Colors.white70),
-        ),
-      ),
-    );
-  }
 }
 
 

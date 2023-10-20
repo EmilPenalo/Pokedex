@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/assets/PokemonList/pokemon_name_style.dart';
-import 'package:pokedex/assets/PokemonList/pokemon_types.dart';
 
-import '../assets/PokemonList/card_item_bg.dart';
-import '../assets/PokemonList/card_item_number.dart';
-import '../assets/PokemonList/liked_icon.dart';
+import 'package:pokedex/assets/PokemonList/pokemon_types.dart';
+import '../assets/PokemonList/card_item_widgets.dart';
 
 class PokemonList extends StatelessWidget {
   const PokemonList({super.key});
