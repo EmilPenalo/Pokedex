@@ -20,16 +20,19 @@ CachedNetworkImage loadImage(String url) {
 
 Widget errorWidget(context, url, error) {
   print("Error loading image: $error");
-  return Icon(Icons.error, color: Colors.grey.shade700);
+  return Icon(Icons.cancel_rounded, color: Colors.grey.shade500, size: 35);
 }
 
 
 Widget loadingCircle() {
-  return Container(
-    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-    child: CircularProgressIndicator(
-      strokeWidth: 2,
-      color: primaryColor(),
-    )
+  return Center(
+    child: SizedBox(
+      height: 45,
+      width: 45,
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        valueColor: AlwaysStoppedAnimation<Color>(primaryColor()),
+      ),
+    ),
   );
 }
