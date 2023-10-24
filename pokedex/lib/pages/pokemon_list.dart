@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/ui/Pokemon/image_helper.dart';
 
-import 'package:pokedex/assets/PokemonList/pokemon_types.dart';
-import '../assets/PokemonList/card_item_widgets.dart';
+import 'package:pokedex/ui/Pokemon/pokemon_types.dart';
+import '../ui/Pokemon/card_item_widgets.dart';
 
 class PokemonList extends StatelessWidget {
   const PokemonList({super.key});
@@ -50,6 +51,9 @@ class PokemonList extends StatelessWidget {
                           right: 0,
                           child: Column(
                             children: [
+
+                              // Imagen del pokemon
+                              pokemonImage("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"),
 
                               // Nombre del pokemon
                               Container(

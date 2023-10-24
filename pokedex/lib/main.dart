@@ -2,8 +2,9 @@ import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/pages/pokemon_list.dart';
 
-import 'assets/HomePageHeader/favorites_action_button.dart';
-import 'assets/HomePageHeader/header_widgets.dart';
+import 'ui/HomePageHeader/favorites_action_button.dart';
+import 'ui/HomePageHeader/header_widgets.dart';
+import 'style_variables.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
-      title: const Text("POKEDEX"),
+      title: appHeaderTitle(),
       actions: [
         favoritesActionButton()
       ],
@@ -45,7 +46,7 @@ class HomePage extends StatelessWidget {
 
       ],
       backgroundColor: Colors.grey[50],
-      appBarColor: Colors.blue,
+      appBarColor: primaryColor()
     );
   }
 

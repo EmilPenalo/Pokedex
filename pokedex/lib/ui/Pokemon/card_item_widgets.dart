@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../style_variables.dart';
 
 // Fondo para informacion del pokemon
 Positioned cardItemBackground() {
@@ -23,12 +26,11 @@ Positioned cardItemBackground() {
 
 // Numero del pokemom
 Positioned cardItemNumber(String text) {
-  var style = TextStyle(color: Colors.grey[600], fontWeight:FontWeight.w500, fontSize: 13);
   return Positioned(
       right: 0,
       child: Container(
         padding: const EdgeInsets.all(10),
-        child: Text(text, style: style,),
+        child: Text(text, style: subtitleTextStyle(),),
       )
   );
 }
@@ -39,8 +41,9 @@ Container likedIcon() {
     height: 40,
     width: 40,
     padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+
     decoration: BoxDecoration(
-      color: Colors.yellow[500],
+      color: primaryColor(),
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(15),
         topRight: Radius.circular(5),
@@ -48,9 +51,15 @@ Container likedIcon() {
         bottomRight: Radius.circular(40),
       ),
     ),
-    child: const Align(
+
+    child: Container(
       alignment: Alignment.topLeft,
-      child: Icon(Icons.star_sharp, color: Colors.white, size: 22),
+      padding: const EdgeInsets.fromLTRB(3, 3, 0, 0),
+      child: SvgPicture.asset(
+        'lib/resources/pokeball_icon.svg',
+        width: 18,
+        height: 18,
+      ),
     ),
   );
 }
@@ -61,7 +70,7 @@ FittedBox pokemonNameWidget(String name) {
     fit: BoxFit.scaleDown,
     child: Text(
       name,
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: Colors.grey[800]),
+      style: baseTextStyle()
     ),
   );
 }

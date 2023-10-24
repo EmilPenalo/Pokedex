@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../style_variables.dart';
 import 'favorites_action_button.dart';
 
 Row headerBottomBarWidget() {
@@ -15,10 +16,14 @@ Row headerBottomBarWidget() {
   );
 }
 
+Widget appHeaderTitle() {
+  return const Text("POKEDEX");
+}
+
 Widget headerWidget(BuildContext context) {
 
-  Color bgColor = Colors.blue;
-  double imageOpacity = 0.5;
+  Color bgColor = primaryColor();
+  double imageOpacity = 0.4;
   String imageSource = 'lib/resources/pokeball.png';
 
   TextStyle titleStyle = const TextStyle(
