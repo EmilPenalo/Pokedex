@@ -29,12 +29,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
+      // se necesita el CONTEXT en el acttion para cambiar de pagina, por esto, se pasa como parametro
       title: appHeaderTitle(),
       actions: [
-        favoritesActionButton()
+        favoritesActionButton(context)
       ],
       headerWidget: headerWidget(context),
-      headerBottomBar: headerBottomBarWidget(),
+      headerBottomBar: headerBottomBarWidget(context),
       body: const [
 
         Text("Search Bar"),
@@ -43,7 +44,6 @@ class HomePage extends StatelessWidget {
 
         // Listado principal
         PokemonList()
-
       ],
       backgroundColor: Colors.grey[50],
       appBarColor: primaryColor()

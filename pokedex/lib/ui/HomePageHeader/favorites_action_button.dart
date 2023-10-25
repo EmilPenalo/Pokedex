@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-IconButton favoritesActionButton() {
+import '../../pages/capture_pokemon_list.dart';
+
+IconButton favoritesActionButton(BuildContext context) {
   return IconButton(
       icon: CircleAvatar(
         backgroundColor: Colors.transparent,
@@ -23,10 +25,15 @@ IconButton favoritesActionButton() {
         ),
       ),
 
-      onPressed: handleFavoriteButtonClick
+      onPressed: () => handleFavoriteButtonClick(context),
   );
 }
 
-void handleFavoriteButtonClick() {
-  print("Clicked Favorites");
+void handleFavoriteButtonClick(BuildContext context) {
+  Navigator.of(context)
+  .push(
+    MaterialPageRoute(
+      builder: (context) => CapturePokemonList()
+    )
+  );
 }

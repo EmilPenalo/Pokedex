@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import '../../style_variables.dart';
 import 'favorites_action_button.dart';
 
-Row headerBottomBarWidget() {
+Row headerBottomBarWidget(BuildContext context) {
   return Row(
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.end,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-
-      favoritesActionButton()
-
+      favoritesActionButton(context)
     ],
   );
 }
