@@ -4,8 +4,12 @@ import 'package:pokedex/style_variables.dart';
 
 Widget pokemonImage(String url) {
   return SizedBox(
-    height: 120,
-    child: loadImage(url),
+    height: 130,
+    width: 170,
+    child: Transform.translate(
+      offset: const Offset(0, 10),
+      child: loadImage(url),
+    ),
   );
 }
 
@@ -15,6 +19,7 @@ CachedNetworkImage loadImage(String url) {
     placeholder: (context, url) => loadingCircle(),
     errorWidget: (context, url, error) => errorWidget(context, url, error),
     fit: BoxFit.contain,
+    alignment: Alignment.bottomCenter,
   );
 }
 
