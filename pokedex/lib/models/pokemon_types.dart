@@ -1,8 +1,8 @@
-import 'package:pokedex/models/pokemon_type_detail.dart';
+import 'package:pokedex/models/pokemon_type.dart';
 
 class Types {
   final int slot;
-  final TypeDetail type;
+  final Type type;
 
   const Types({
     required this.slot,
@@ -10,7 +10,7 @@ class Types {
   });
 
   factory Types.fromJson(Map<String, dynamic> json) {
-    TypeDetail type = TypeDetail.fromJson(json['type'] as Map<String, dynamic>);
+    Type type = Type.fromJson(json['type'] as Map<String, dynamic>);
 
     return Types(
       slot: json['slot'] as int,

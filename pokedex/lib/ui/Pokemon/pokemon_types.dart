@@ -12,53 +12,45 @@ Row pokemonTypes(String type1, String type2) {
   );
 
   var colorType1 = getColor(type1);
-  var colorType2 = getColor(type2);
+  var colorType2 = type2.isNotEmpty ? getColor(type2) : null;
 
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-
       // Type 1
       Expanded(
         child: SizedBox(
-            height: height,
-
-            child: Container(
-              alignment: Alignment.center,
-              padding: padding,
-
-              decoration: BoxDecoration(
-                color: colorType1,
-                borderRadius: BorderRadius.circular(20),
+          height: height,
+          child: Container(
+            alignment: Alignment.center,
+            padding: padding,
+            decoration: BoxDecoration(
+              color: colorType1,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                type1,
+                style: textStyle,
               ),
-
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  type1,
-                  style: textStyle,
-                ),
-              ),
-            )
+            ),
+          ),
         ),
       ),
-
-      const SizedBox(width: spacing),
-
-      // Type 2
-      Expanded(
-        child: SizedBox(
+      if (type2.isNotEmpty) ...[
+        const SizedBox(width: spacing),
+        // Type 2
+        Expanded(
+          child: SizedBox(
             height: height,
-
             child: Container(
               alignment: Alignment.center,
               padding: padding,
-
               decoration: BoxDecoration(
                 color: colorType2,
                 borderRadius: BorderRadius.circular(20),
               ),
-
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
@@ -66,9 +58,10 @@ Row pokemonTypes(String type1, String type2) {
                   style: textStyle,
                 ),
               ),
-            )
+            ),
+          ),
         ),
-      ),
+      ],
     ],
   );
 }

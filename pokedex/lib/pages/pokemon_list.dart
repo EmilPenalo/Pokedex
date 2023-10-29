@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon_info.dart';
 
+import '../functions.dart';
 import '../models/pokedex.dart';
 import '../ui/Pokemon/card_item_widgets.dart';
 import '../ui/Pokemon/image_helper.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 import 'package:http/http.dart' as http;
 
-Future<Pokedex> fetchPokedex() async {
+Future<Pokedex> fetchPokedex(String? url) async {
   final response = await http
-      .get(Uri.parse('https://pokeapi.co/api/v2/pokemon'));
+      .get(Uri.parse(url!));
 
   if (response.statusCode == 200) {
     final responseData = jsonDecode(response.body);
@@ -40,13 +41,17 @@ class PokemonList extends StatefulWidget {
   State<PokemonList> createState() => _PokemonListState();
 }
 
+ScrollController _scrollController = ScrollController();
+
 class _PokemonListState extends State<PokemonList> {
   late Future<Pokedex> _futurePokedex;
+  //var isLoading = true;
+  //var isAddLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _futurePokedex = fetchPokedex();
+    _futurePokedex = fetchPokedex('https://pokeapi.co/api/v2/pokemon');
   }
 
   @override
@@ -105,8 +110,9 @@ class _PokemonListState extends State<PokemonList> {
                                     likedIcon(),
 
                                   // Numero del Pokemon
-                                  cardItemNumber(pokemonInfo?.id.toString() ?? "ID"),
-
+                                  cardItemNumber(
+                                      formatNumber(pokemonInfo!.id),
+                                  ),
                                   // Fondo decorativo
                                   cardItemBackground(),
 
@@ -119,27 +125,29 @@ class _PokemonListState extends State<PokemonList> {
                                       children: [
 
                                         // Imagen del pokemon
-                                        pokemonImage("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"),
-
+                                        //pokemonImage("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"),
+                                        pokemonImage(pokemonInfo.sprites.other.officialArtwork.frontDefault),
                                         // Nombre del pokemon
                                         Container(
                                           padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                                          child: pokemonNameWidget(pokemon?.name ?? "NAME"),
+                                          child: pokemonNameWidget(
+                                              capitalizeFirstLetter(pokemon!.name)
+                                          ),
                                         ),
 
                                         // Tipos del pokemon
                                         Container(
-                                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                                            child: pokemonTypes(
-                                              pokemonInfo?.types[0].type.name ?? "TYPE 1",
-                                              pokemonInfo?.types[1].type.name ?? "TYPE 2",
-                                            )
-                                        ),
-
+                                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                                          child: pokemonTypes(
+                                            capitalizeFirstLetter(pokemonInfo.types[0].type.name),
+                                            pokemonInfo.types.length >= 2
+                                                ? capitalizeFirstLetter(pokemonInfo.types[1].type.name)
+                                                : '',
+                                          ),
+                                        )
                                       ],
                                     ),
                                   )
-
                                 ],
                               ),
                             ),
