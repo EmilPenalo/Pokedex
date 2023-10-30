@@ -3,22 +3,27 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pokedex/style_variables.dart';
 
 Widget pokemonImage(String url) {
-  return SizedBox(
-    height: 115,
-    child: Transform.translate(
+  return Transform.translate(
       offset: const Offset(0, 5),
-      child: loadImage(url),
-    ),
+      child: loadImage(url)
   );
 }
 
 CachedNetworkImage loadImage(String url) {
   return CachedNetworkImage(
     imageUrl: url,
+    imageBuilder: (context, imageProvider) => Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: imageProvider,
+          fit: BoxFit.contain,
+          alignment: Alignment.bottomCenter,
+          filterQuality: FilterQuality.none,
+        )
+      ),
+    ),
     placeholder: (context, url) => loadingCircle(),
     errorWidget: (context, url, error) => errorWidget(context, url, error),
-    fit: BoxFit.fill,
-    alignment: Alignment.bottomCenter,
   );
 }
 

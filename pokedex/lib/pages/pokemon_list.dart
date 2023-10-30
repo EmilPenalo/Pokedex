@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon_info.dart';
 
-import '../functions.dart';
+import '../helpers/text_helper.dart';
 import '../models/pokedex.dart';
 import '../ui/Pokemon/card_item_widgets.dart';
 import '../ui/Pokemon/image_helper.dart';
@@ -63,7 +63,10 @@ class _PokemonListState extends State<PokemonList> {
             return Text('Error: ${pokedexSnapshot.error}');
 
           } else if (!pokedexSnapshot.hasData) {
-            return const CircularProgressIndicator();
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                child: const CircularProgressIndicator()
+            );
 
           } else { // snapshot.hasData
             final pokedex = pokedexSnapshot.data;
@@ -89,7 +92,7 @@ class _PokemonListState extends State<PokemonList> {
                       return Text('Error: ${pokemonInfoSnapshot.error}');
 
                     } else if (!pokemonInfoSnapshot.hasData) {
-                      return const CircularProgressIndicator();
+                      return pokemonCardPlaceHolder();
 
                     } else { // snapshot.hasData
                       final pokemonInfo = pokemonInfoSnapshot.data;
@@ -125,8 +128,11 @@ class _PokemonListState extends State<PokemonList> {
                                       children: [
 
                                         // Imagen del pokemon
-                                        //pokemonImage("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"),
-                                        pokemonImage(pokemonInfo.sprites.other.officialArtwork.frontDefault),
+                                        SizedBox(
+                                          height: 115, // Tamaño maximo de la foto
+                                          child: pokemonImage(pokemonInfo.sprites.other.officialArtwork.frontDefault),
+                                        ),
+
                                         // Nombre del pokemon
                                         Container(
                                           padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),

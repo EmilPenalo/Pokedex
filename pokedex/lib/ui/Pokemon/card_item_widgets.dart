@@ -74,3 +74,18 @@ FittedBox pokemonNameWidget(String name) {
     ),
   );
 }
+
+Widget pokemonCardPlaceHolder() {
+  return Card(
+      color: Colors.white,
+      elevation: 0.8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Stack(
+      children: [
+        cardItemBackground(),
+      ],
+    )
+  );
+}
