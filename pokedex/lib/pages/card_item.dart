@@ -33,8 +33,6 @@ class PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("I:" + index.toString() + " POKEMON: " + pokemon.name);
-
     return FutureBuilder<PokemonInfo>(
         future: fetchPokemonInfo(pokemon.url),
         builder: (context, pokemonInfoSnapshot) {

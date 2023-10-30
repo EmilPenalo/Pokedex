@@ -18,7 +18,7 @@ CachedNetworkImage loadImage(String url) {
           image: imageProvider,
           fit: BoxFit.contain,
           alignment: Alignment.bottomCenter,
-          filterQuality: FilterQuality.none,
+          filterQuality: FilterQuality.low,
         )
       ),
     ),

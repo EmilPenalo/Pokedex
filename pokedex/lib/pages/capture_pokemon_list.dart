@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/pages/pokemon_list.dart';
+import 'package:pokedex/pages/paged_list.dart';
 import '../style_variables.dart';
 
 class CapturePokemonList extends StatelessWidget {

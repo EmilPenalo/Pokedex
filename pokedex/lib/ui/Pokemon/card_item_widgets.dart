@@ -83,11 +83,11 @@ Widget pokemonCardPlaceHolder() {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Stack(
-      children: [
-        cardItemBackground(),
-      ],
-    )
-  );
+        children: [
+          cardItemBackground(),
+        ],
+      )
+    );
 }
 
 Widget pokemonCardError() {

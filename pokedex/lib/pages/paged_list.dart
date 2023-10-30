@@ -35,9 +35,7 @@ Future<PokemonInfo> fetchPokemonInfo(String url) async {
 }
 
 class PokemonList extends StatefulWidget {
-  final ScrollController scrollController;
-
-  const PokemonList({Key? key, required this.scrollController}) : super(key: key);
+  const PokemonList({Key? key}) : super(key: key);
 
   @override
   State<PokemonList> createState() => _PokemonListState();
@@ -50,33 +48,31 @@ class _PokemonListState extends State<PokemonList> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      if (pageKey == 0) {
+      // if (pageKey == 0) {
         _fetchPage(pageKey);
-      }
+      // }
     });
 
-    widget.scrollController.addListener(() {
-      if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
-        _fetchPage(_pagingController.nextPageKey ?? 0);
-      }
-    });
+    // widget.scrollController.addListener(() {
+    //   if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
+    //     _fetchPage(_pagingController.nextPageKey ?? 0);
+    //   }
+    // });
 
     super.initState();
   }
 
-  int i = 0;
   Future<void> _fetchPage(int pageKey) async {
     try {
       final pokedex = await fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=20&offset=' + (pageKey*20).toString());
       final newItems = pokedex.results;
 
-      final isLastPage = pokedex.count < _pageSize || i > 2;
+      final isLastPage = pokedex.count < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + 1;
         _pagingController.appendPage(newItems, nextPageKey);
-        i++;
       }
     } catch (error) {
       _pagingController.error = error;
@@ -89,9 +85,6 @@ class _PokemonListState extends State<PokemonList> {
           () => _pagingController.refresh(),
     ),
     child: PagedGridView<int, Pokemon>(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Pokemon>(

@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_info.dart';
 
-import '../helpers/text_helper.dart';
 import '../models/pokedex.dart';
 import '../ui/Pokemon/card_item_widgets.dart';
-import '../helpers/image_helper.dart';
-import '../ui/Pokemon/pokemon_types.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 

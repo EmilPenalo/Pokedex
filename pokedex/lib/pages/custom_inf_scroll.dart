@@ -33,40 +33,34 @@ class _PokemonListState extends State<PokemonList> {
   int pageKey = 0;
   bool loading = false;
 
-  static const _pageSize = 10;
+  late Future<Pokedex> _futurePokedex;
+
+  static const _pageSize = 100;
 
   @override
   void initState() {
     super.initState();
-    _fetchPage();
-
-    widget.scrollController.addListener(() {
-      print("POS: " + widget.scrollController.position.pixels.toString() + " MAX: " + widget.scrollController.position.maxScrollExtent.toString());
-
-      if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
-        print("Max Scroll Reached");
-        _fetchPage();
-      }
-    });
+    _fetchPage(true);
   }
 
-  void _fetchPage() async {
-
+  void _fetchPage(bool hardLoad) {
     if (loading) return;
 
     setState(() {
       loading = true;
     });
 
-    try {
-      if (pageKey >= 0) {
-        print("Fetching: " + pageKey.toString());
-        final pokedex = await fetchPokedex(
-            'https://pokeapi.co/api/v2/pokemon?limit=$_pageSize&offset=${pageKey *
-                _pageSize}');
-        final newItems = pokedex.results;
-        print("Got em: ${newItems.length}");
+    int size;
+    if (hardLoad) {
+      size = _pageSize;
+    } else {
+      size = 20;
+    }
 
+    if (pageKey >= 0) {
+      _futurePokedex = fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=$size&offset=${items.length}');
+      _futurePokedex.then((pokedex) {
+        final newItems = pokedex.results;
         final isLastPage = pokedex.count < _pageSize;
         if (isLastPage) {
           setState(() {
@@ -76,54 +70,48 @@ class _PokemonListState extends State<PokemonList> {
           setState(() {
             pageKey = pageKey + 1;
           });
-          print(pageKey);
         }
         items.addAll(newItems);
-      }
-    } catch (error) {
-      print(error);
+      }).catchError((error) {
+        print(error);
 
-    } finally {
-      setState(() {
-        loading = false;
+      }).whenComplete(() {
+        setState(() {
+          loading = false;
+        });
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GridView.builder(
-          /* IMPORTANT */
-          // Previenen error de rendering con el header de la pagina principal
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: items.length,
-            /* IMPORTANT */
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
+        _fetchPage(true);
 
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Pokemons por fila
-            ),
+      } else if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent - (180 * 5)) {
+        _fetchPage(false);
+      }
+    });
 
-            itemBuilder: (BuildContext context, int index) {
-              final pokemon = items[index];
-              return PokemonCard(pokemon: pokemon, index: index);
-            }
-        ),
-        Container(
-          alignment: Alignment.topCenter,
-          height: 60,
-          child: IconButton(
-              onPressed: () {
-                _fetchPage();
-              },
-              icon: Icon(Icons.arrow_circle_down_rounded, color: Colors.grey[400], size: 30,)
-          ),
-        ),
-      ],
+    return GridView.builder(
+      /* IMPORTANT */
+      // Prevents error of rendering with the header of the main page
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: items.length,
+      /* IMPORTANT */
+
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // Pokemons per row
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        final pokemon = items[index];
+        return PokemonCard(pokemon: pokemon, index: index);
+      },
     );
+
   }
 
 }
