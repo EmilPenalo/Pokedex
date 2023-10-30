@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:pokedex/pages/pokemon_list.dart';
 import '../style_variables.dart';
 
 class CapturePokemonList extends StatelessWidget {
@@ -13,7 +13,7 @@ class CapturePokemonList extends StatelessWidget {
         centerTitle: true,
         backgroundColor: primaryColor(),
       ),
-      body: const Text('99 / 100')
+      body: const PokemonList()
     );
   }
 }

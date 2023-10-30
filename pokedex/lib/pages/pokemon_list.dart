@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_info.dart';
 
 import '../helpers/text_helper.dart';
 import '../models/pokedex.dart';
 import '../ui/Pokemon/card_item_widgets.dart';
-import '../ui/Pokemon/image_helper.dart';
+import '../helpers/image_helper.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 import 'package:http/http.dart' as http;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+import 'card_item.dart';
 
 Future<Pokedex> fetchPokedex(String? url) async {
   final response = await http
@@ -41,17 +45,37 @@ class PokemonList extends StatefulWidget {
   State<PokemonList> createState() => _PokemonListState();
 }
 
-ScrollController _scrollController = ScrollController();
-
 class _PokemonListState extends State<PokemonList> {
   late Future<Pokedex> _futurePokedex;
-  //var isLoading = true;
-  //var isAddLoading = true;
+
+  static const _pageSize = 20;
+  final PagingController<int, Pokemon> _pagingController = PagingController(firstPageKey: 1);
 
   @override
   void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+
     super.initState();
     _futurePokedex = fetchPokedex('https://pokeapi.co/api/v2/pokemon');
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final pokedex = await fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=20&offset=$pageKey*20');
+      final newItems = pokedex.results;
+
+      final isLastPage = pokedex.count < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
   }
 
   @override
@@ -70,7 +94,8 @@ class _PokemonListState extends State<PokemonList> {
 
           } else { // snapshot.hasData
             final pokedex = pokedexSnapshot.data;
-            return GridView.builder(
+
+            GridView builder = GridView.builder(
               /* IMPORTANT */
               // Previenen error de rendering con el header de la pagina principal
               physics: const NeverScrollableScrollPhysics(),
@@ -85,86 +110,14 @@ class _PokemonListState extends State<PokemonList> {
               ),
               itemBuilder: (BuildContext context, int index) {
                 final pokemon = pokedex?.results[index];
-                return FutureBuilder<PokemonInfo>(
-                  future: fetchPokemonInfo(pokemon?.url ?? "URL"),
-                  builder: (context, pokemonInfoSnapshot) {
-                    if (pokemonInfoSnapshot.hasError) {
-                      return Text('Error: ${pokemonInfoSnapshot.error}');
-
-                    } else if (!pokemonInfoSnapshot.hasData) {
-                      return pokemonCardPlaceHolder();
-
-                    } else { // snapshot.hasData
-                      final pokemonInfo = pokemonInfoSnapshot.data;
-                      return Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Card(
-                              color: Colors.white,
-                              elevation: 0.8,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Stack(
-                                children: [
-
-                                  // Icono de favorito
-                                  if (true) // Conditional si esta liked
-                                    likedIcon(),
-
-                                  // Numero del Pokemon
-                                  cardItemNumber(
-                                      formatNumber(pokemonInfo!.id),
-                                  ),
-                                  // Fondo decorativo
-                                  cardItemBackground(),
-
-                                  // Informacion del Pokemon
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Column(
-                                      children: [
-
-                                        // Imagen del pokemon
-                                        SizedBox(
-                                          height: 115, // Tamaño maximo de la foto
-                                          child: pokemonImage(pokemonInfo.sprites.other.officialArtwork.frontDefault),
-                                        ),
-
-                                        // Nombre del pokemon
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                                          child: pokemonNameWidget(
-                                              capitalizeFirstLetter(pokemon!.name)
-                                          ),
-                                        ),
-
-                                        // Tipos del pokemon
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                                          child: pokemonTypes(
-                                            capitalizeFirstLetter(pokemonInfo.types[0].type.name),
-                                            pokemonInfo.types.length >= 2
-                                                ? capitalizeFirstLetter(pokemonInfo.types[1].type.name)
-                                                : '',
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                );
+                if (pokemon == null) {
+                  return pokemonCardError();
+                }
+                return PokemonCard(pokemon: pokemon, index: index);
               },
             );
+
+            return builder;
           }
         },
     );

@@ -89,3 +89,28 @@ Widget pokemonCardPlaceHolder() {
     )
   );
 }
+
+Widget pokemonCardError() {
+  return Card(
+      color: Colors.white,
+      elevation: 0.8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Stack(
+        children: [
+          cardItemBackground(),
+
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.cancel_rounded, color: Colors.grey.shade500, size: 35),
+                Text("Error al cargar el Pokemon", style: subtitleTextStyle(),)
+              ],
+            ),
+          ),
+        ],
+      )
+  );
+}
