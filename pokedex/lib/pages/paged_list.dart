@@ -48,16 +48,8 @@ class _PokemonListState extends State<PokemonList> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      // if (pageKey == 0) {
         _fetchPage(pageKey);
-      // }
     });
-
-    // widget.scrollController.addListener(() {
-    //   if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
-    //     _fetchPage(_pagingController.nextPageKey ?? 0);
-    //   }
-    // });
 
     super.initState();
   }
@@ -88,7 +80,7 @@ class _PokemonListState extends State<PokemonList> {
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Pokemon>(
-        animateTransitions: false,
+        animateTransitions: true,
 
         itemBuilder: (context, item, index) => PokemonCard(
           pokemon: item,
