@@ -9,16 +9,16 @@ import '../ui/Pokemon/card_item_widgets.dart';
 import '../helpers/image_helper.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 
-Future<PokemonInfo> fetchPokemonInfo(String url) async {
-  final response = await http
-      .get(Uri.parse(url));
-
-  if (response.statusCode == 200) {
-    final responseData = jsonDecode(response.body);
-    return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
-  } else {
-    throw Exception('Failed to load pokemonInfo');
-  }
+Future<PokemonInfo> fetchPokemonInfo(String url) {
+  return http.get(Uri.parse(url))
+      .then((response) {
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
+    } else {
+      throw Exception('Failed to load pokemonInfo');
+    }
+  });
 }
 
 class PokemonCard extends StatelessWidget {

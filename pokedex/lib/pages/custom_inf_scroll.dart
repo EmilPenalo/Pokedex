@@ -40,22 +40,15 @@ class _PokemonListState extends State<PokemonList> {
   @override
   void initState() {
     super.initState();
-    _fetchPage(true);
+    _fetchPage(_pageSize);
   }
 
-  void _fetchPage(bool hardLoad) {
+  void _fetchPage(int size) {
     if (loading) return;
 
     setState(() {
       loading = true;
     });
-
-    int size;
-    if (hardLoad) {
-      size = _pageSize;
-    } else {
-      size = 20;
-    }
 
     if (pageKey >= 0) {
       _futurePokedex = fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=$size&offset=${items.length}');
@@ -87,10 +80,10 @@ class _PokemonListState extends State<PokemonList> {
   Widget build(BuildContext context) {
     widget.scrollController.addListener(() {
       if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
-        _fetchPage(true);
+        _fetchPage(20);
 
-      } else if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent - (180 * 5)) {
-        _fetchPage(false);
+      } else if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent - (200 * 6)) {
+        _fetchPage(2);
       }
     });
 

@@ -40,14 +40,8 @@ class HomePage extends StatelessWidget {
       headerBottomBar: headerBottomBarWidget(context),
       body: [
         PokemonList(scrollController: _scrollController)
-        // PokemonList()
-
-        // Listado principal
-        // SizedBox(
-        //   height: 800,
-        //   child: PokemonList(scrollController: _scrollController)
-        // )
       ],
+      physics: const BouncingScrollPhysics(),
       scrollController: _scrollController,
       backgroundColor: Colors.grey[50],
       appBarColor: primaryColor()
