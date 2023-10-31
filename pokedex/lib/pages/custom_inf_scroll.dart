@@ -35,12 +35,10 @@ class _PokemonListState extends State<PokemonList> {
 
   late Future<Pokedex> _futurePokedex;
 
-  static const _pageSize = 100;
-
   @override
   void initState() {
     super.initState();
-    _fetchPage(_pageSize);
+    _fetchPage(50);
   }
 
   void _fetchPage(int size) {
@@ -54,7 +52,7 @@ class _PokemonListState extends State<PokemonList> {
       _futurePokedex = fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=$size&offset=${items.length}');
       _futurePokedex.then((pokedex) {
         final newItems = pokedex.results;
-        final isLastPage = pokedex.count < _pageSize;
+        final isLastPage = pokedex.count < size;
         if (isLastPage) {
           setState(() {
             pageKey = -1;
@@ -80,10 +78,10 @@ class _PokemonListState extends State<PokemonList> {
   Widget build(BuildContext context) {
     widget.scrollController.addListener(() {
       if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent) {
-        _fetchPage(20);
+        _fetchPage(50);
 
-      } else if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent - (200 * 6)) {
-        _fetchPage(2);
+      } else if (widget.scrollController.position.pixels >= widget.scrollController.position.maxScrollExtent - (200 * 5)) {
+        _fetchPage(20);
       }
     });
 
