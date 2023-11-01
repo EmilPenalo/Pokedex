@@ -2,10 +2,12 @@ class Pokemon {
   late int id;
   final String name;
   final String url;
+  final bool isCaptured;
 
   Pokemon({
     required this.name,
     required this.url,
+    this.isCaptured = false,
   }) {
     id = getId(url);
   }
@@ -37,7 +39,7 @@ class Pokemon {
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     return Pokemon(
         name: json['name'] as String,
-        url: json['url'] as String
+        url: json['url'] as String,
     );
   }
 
@@ -46,6 +48,7 @@ class Pokemon {
       'id': id,
       'name': name,
       'url': url,
+      'isCaptured': isCaptured,
     };
   }
 }
