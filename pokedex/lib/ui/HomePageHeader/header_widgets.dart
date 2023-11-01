@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../style_variables.dart';
-import 'favorites_action_button.dart';
+import 'header_actions.dart';
 
 Row headerBottomBarWidget(BuildContext context) {
   return Row(
@@ -18,7 +18,7 @@ Widget appHeaderTitle() {
   return const Text("POKEDEX");
 }
 
-Widget headerWidget(BuildContext context) {
+Widget expandedHeaderWidget(BuildContext context) {
 
   Color bgColor = primaryColor();
   double imageOpacity = 0.4;
@@ -31,42 +31,110 @@ Widget headerWidget(BuildContext context) {
     letterSpacing: 10.0,
   );
 
-  return Container(
-    color: bgColor,
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-
-        // Imagen de Pokeball
-        Center(
+  return Stack(
+    children: [
+      OverflowBox(
+          alignment: Alignment.center,
+          maxWidth: 420,
+          maxHeight: 300,
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
-            child:
-            Image.asset(
-              imageSource,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              fit: BoxFit.contain,
-              color: bgColor.withOpacity(imageOpacity),
-              colorBlendMode: BlendMode.srcOver,
+            color: bgColor,
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+
+                // Imagen de Pokeball
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                    child:
+                    Image.asset(
+                      imageSource,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      fit: BoxFit.contain,
+                      color: bgColor.withOpacity(imageOpacity),
+                      colorBlendMode: BlendMode.srcOver,
+                    ),
+                  ),
+                ),
+
+                // Texto
+                Center(
+                  child: FittedBox(
+                    alignment: Alignment.center,
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "POKEDEX",
+                      style: titleStyle,
+                    ),
+                  ),
+                ),
+
+              ],
             ),
+          )
+      ),
+
+      Positioned(
+        bottom: 0,
+        right: 0,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            children: [
+              Flexible(
+                fit: FlexFit.loose,
+                child: searchBar(),
+              ),
+              favoritesActionButton(context),
+            ],
           ),
         ),
+      ),
 
-        // Texto
-        Center(
-          child: FittedBox(
-            alignment: Alignment.center,
-            fit: BoxFit.scaleDown,
-            child: Text(
-              "POKEDEX",
-              style: titleStyle,
-            ),
-          ),
-        ),
-
-      ],
-    ),
+    ],
   );
 }
+
+Widget headerSmall(BuildContext context) {
+  return Column(
+    children: [
+      AppBar(
+        elevation: 0,
+        backgroundColor: primaryColor(),
+        title: appHeaderTitle(),
+        centerTitle: true,
+        actions: [
+          favoritesActionButton(context)
+        ],
+      ),
+
+      searchBar()
+    ],
+  );
+}
+
+Widget headerWidget(BuildContext context) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      double top = constraints.biggest.height;
+      bool isExpanded = top > 145;
+
+      return AnimatedCrossFade(
+        duration: const Duration(milliseconds: 500),
+        firstCurve: Curves.easeInOutCubic,
+        secondCurve: Curves.easeInOutCubic,
+        sizeCurve: Curves.easeInOutCubic,
+        crossFadeState: isExpanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+        firstChild: isExpanded ? expandedHeaderWidget(context) : const SizedBox(height: 0,),
+        secondChild: headerSmall(context),
+        alignment: Alignment.topCenter,
+      );
+    },
+  );
+}
+
+
