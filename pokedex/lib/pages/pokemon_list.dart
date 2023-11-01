@@ -5,7 +5,6 @@ import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_info.dart';
 
 import '../models/pokedex.dart';
-import '../ui/Pokemon/card_item_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -36,31 +35,28 @@ Future<PokemonInfo> fetchPokemonInfo(String url) async {
 }
 
 class PokemonList extends StatefulWidget {
-  const PokemonList({super.key});
+  const PokemonList({Key? key}) : super(key: key);
 
   @override
   State<PokemonList> createState() => _PokemonListState();
 }
 
 class _PokemonListState extends State<PokemonList> {
-  late Future<Pokedex> _futurePokedex;
-
   static const _pageSize = 20;
-  final PagingController<int, Pokemon> _pagingController = PagingController(firstPageKey: 1);
+  final PagingController<int, Pokemon> _pagingController = PagingController(firstPageKey: 0);
 
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+        _fetchPage(pageKey);
     });
 
     super.initState();
-    _futurePokedex = fetchPokedex('https://pokeapi.co/api/v2/pokemon');
   }
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final pokedex = await fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=20&offset=$pageKey*20');
+      final pokedex = await fetchPokedex('https://pokeapi.co/api/v2/pokemon?limit=20&offset=' + (pageKey*20).toString());
       final newItems = pokedex.results;
 
       final isLastPage = pokedex.count < _pageSize;
@@ -76,47 +72,29 @@ class _PokemonListState extends State<PokemonList> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Pokedex>(
-        future: _futurePokedex,
-        builder: (context, pokedexSnapshot) {
-          if (pokedexSnapshot.hasError) {
-            return Text('Error: ${pokedexSnapshot.error}');
+  Widget build(BuildContext context) => RefreshIndicator(
+    onRefresh: () => Future.sync(
+          () => _pagingController.refresh(),
+    ),
+    child: PagedGridView<int, Pokemon>(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<Pokemon>(
+        animateTransitions: true,
 
-          } else if (!pokedexSnapshot.hasData) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                child: const CircularProgressIndicator()
-            );
+        itemBuilder: (context, item, index) => PokemonCard(
+          pokemon: item,
+        ),
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+    ),
+  );
 
-          } else { // snapshot.hasData
-            final pokedex = pokedexSnapshot.data;
-
-            GridView builder = GridView.builder(
-              /* IMPORTANT */
-              // Previenen error de rendering con el header de la pagina principal
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              //itemCount: 20,  // Cambiar al numero de pokemons
-              itemCount: pokedex?.results.length ?? 0,
-              /* IMPORTANT */
-
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Pokemons por fila
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                final pokemon = pokedex?.results[index];
-                if (pokemon == null) {
-                  return pokemonCardError();
-                }
-                return PokemonCard(pokemon: pokemon, index: index);
-              },
-            );
-
-            return builder;
-          }
-        },
-    );
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 }

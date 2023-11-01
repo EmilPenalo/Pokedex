@@ -1,9 +1,7 @@
-import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 
-import 'package:pokedex/pages/paged_list.dart';
+import 'package:pokedex/pages/pokemon_list.dart';
 
-import 'ui/HomePageHeader/header_actions.dart';
 import 'ui/HomePageHeader/header_widgets.dart';
 import 'style_variables.dart';
 
@@ -16,42 +14,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'POKEDEX',
       debugShowCheckedModeBanner: false,
-      home: BigAppBar()
+      home: HomePage()
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  Widget build(BuildContext context) {
-
-    return DraggableHome(
-      title: appHeaderTitle(),
-      actions: [
-        favoritesActionButton(context)
-      ],
-      headerWidget: headerWidget(context),
-      headerBottomBar: headerBottomBarWidget(context),
-      body: [
-        // PokemonList(scrollController: _scrollController)
-      ],
-      physics: const BouncingScrollPhysics(),
-      scrollController: _scrollController,
-      backgroundColor: Colors.grey[50],
-      appBarColor: primaryColor()
-    );
-  }
-
-}
-
-class BigAppBar extends StatelessWidget {
-  const BigAppBar({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +40,6 @@ class BigAppBar extends StatelessWidget {
                 backgroundColor: primaryColor(),
                 expandedHeight: 300,
                 collapsedHeight: 105,
-                // floating: false,
                 pinned: true,
                 flexibleSpace: headerWidget(context),
               ),

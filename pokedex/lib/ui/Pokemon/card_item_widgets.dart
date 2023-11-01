@@ -45,7 +45,7 @@ Container likedIcon() {
     decoration: BoxDecoration(
       color: primaryColor(),
       borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(15),
+        topLeft: Radius.circular(17),
         topRight: Radius.circular(5),
         bottomLeft: Radius.circular(5),
         bottomRight: Radius.circular(40),

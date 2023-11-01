@@ -2,7 +2,7 @@ class Pokemon {
   late int id;
   final String name;
   final String url;
-  final bool isCaptured;
+  bool isCaptured;
 
   Pokemon({
     required this.name,

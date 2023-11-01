@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:pokedex/models/pokemon.dart';
+import '../helpers/database_helper.dart';
+import '../models/pokemon.dart';
 import 'package:http/http.dart' as http;
 import 'package:pokedex/pages/pokemon_details.dart';
 import '../helpers/text_helper.dart';
@@ -22,15 +23,19 @@ Future<PokemonInfo> fetchPokemonInfo(String url) {
   });
 }
 
-class PokemonCard extends StatelessWidget {
+class PokemonCard extends StatefulWidget {
   final Pokemon pokemon;
-  final int index;
 
   const PokemonCard({
     required this.pokemon,
-    required this.index,
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<PokemonCard> createState() => _PokemonCardState();
+}
+
+class _PokemonCardState extends State<PokemonCard> {
 
   void onTap(BuildContext context, String url) {
     Navigator.of(context)
@@ -41,17 +46,30 @@ class PokemonCard extends StatelessWidget {
     );
   }
 
+  Future<void> onDoubleTap(BuildContext context, Pokemon pokemon) async {
+    pokemon.isCaptured = !pokemon.isCaptured;
+    await DatabaseHelper.updatePokemon(pokemon);
+    setState(() {
+      pokemon;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(context, pokemon.url),
+      onTap: () => onTap(context, widget.pokemon.url),
+      onDoubleTap: () => onDoubleTap(context, widget.pokemon),
+
       child: FutureBuilder<PokemonInfo>(
-          future: fetchPokemonInfo(pokemon.url),
+          future: fetchPokemonInfo(widget.pokemon.url),
           builder: (context, pokemonInfoSnapshot) {
+
             if (pokemonInfoSnapshot.hasError) {
               return Text('Error: ${pokemonInfoSnapshot.error}');
+
             } else if (!pokemonInfoSnapshot.hasData) {
               return pokemonCardPlaceHolder();
+
             } else { // snapshot.hasData
               final pokemonInfo = pokemonInfoSnapshot.data;
               return Stack(
@@ -59,20 +77,24 @@ class PokemonCard extends StatelessWidget {
                   Positioned.fill(
                     child: Card(
                       color: Colors.white,
-                      elevation: 0.8,
+                      elevation: 1,
                       shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Colors.grey[100]!,
+                            width: 1
+                        ),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Stack(
                         children: [
 
-                          // Icono de favorito
-                          if (true) // Conditional si esta liked
+                          // Icono de capturado
+                          if (widget.pokemon.isCaptured)
                             likedIcon(),
 
                           // Numero del Pokemon
                           cardItemNumber(
-                            formatNumber(pokemon.id),
+                            formatNumber(widget.pokemon.id),
                           ),
                           // Fondo decorativo
                           cardItemBackground(),
@@ -98,7 +120,7 @@ class PokemonCard extends StatelessWidget {
                                   padding: const EdgeInsets.fromLTRB(
                                       12, 0, 12, 8),
                                   child: pokemonNameWidget(
-                                      capitalizeFirstLetter(pokemon.name)
+                                      capitalizeFirstLetter(widget.pokemon.name)
                                   ),
                                 ),
 

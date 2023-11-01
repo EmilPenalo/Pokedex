@@ -14,10 +14,6 @@ Row headerBottomBarWidget(BuildContext context) {
   );
 }
 
-Widget appHeaderTitle() {
-  return const Text("POKEDEX");
-}
-
 Widget expandedHeaderWidget(BuildContext context) {
 
   Color bgColor = primaryColor();
@@ -105,7 +101,7 @@ Widget headerSmall(BuildContext context) {
       AppBar(
         elevation: 0,
         backgroundColor: primaryColor(),
-        title: appHeaderTitle(),
+        title: const Text("POKEDEX"),
         centerTitle: true,
         actions: [
           favoritesActionButton(context)
