@@ -37,11 +37,11 @@ class PokemonCard extends StatefulWidget {
 
 class _PokemonCardState extends State<PokemonCard> {
 
-  void onTap(BuildContext context, String url) {
+  void onTap(BuildContext context, Pokemon pokemon) {
     Navigator.of(context)
         .push(
         MaterialPageRoute(
-            builder: (context) => PokemonDetails(url: url)
+            builder: (context) => PokemonDetails(pokemon: pokemon)
         )
     );
   }
@@ -57,7 +57,7 @@ class _PokemonCardState extends State<PokemonCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(context, widget.pokemon.url),
+      onTap: () => onTap(context, widget.pokemon),
       onDoubleTap: () => onDoubleTap(context, widget.pokemon),
 
       child: FutureBuilder<PokemonInfo>(

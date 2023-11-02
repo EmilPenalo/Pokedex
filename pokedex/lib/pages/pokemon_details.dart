@@ -1,8 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_more_info.dart';
 import 'package:http/http.dart' as http;
+
+import '../helpers/text_helper.dart';
+import '../style_variables.dart';
 
 Future<PokemonMoreInfo> fetchPokemonMoreInfo(String url) async {
   final response = await http
@@ -17,11 +21,11 @@ Future<PokemonMoreInfo> fetchPokemonMoreInfo(String url) async {
 }
 
 class PokemonDetails extends StatefulWidget {
-  final String url;
+  final Pokemon pokemon;
 
   const PokemonDetails({
     super.key,
-    required this.url
+    required this.pokemon
   });
 
   @override
@@ -33,7 +37,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
 
   @override
   void initState() {
-    _futurePokemonMoreInfo = fetchPokemonMoreInfo(widget.url);
+    _futurePokemonMoreInfo = fetchPokemonMoreInfo(widget.pokemon.url);
     super.initState();
   }
 
@@ -50,25 +54,74 @@ class _PokemonInfoState extends State<PokemonDetails> {
           final pokemonMoreInfo = pokemonMoreInfoSnapshot.data;
           return Scaffold(
             appBar: AppBar(
-              title: const Text('DETALLES!'),
-            ),
-            body: Column(
-              children: [
-                Text('Height: ${pokemonMoreInfo?.height.toString()}'),
-                Text('Weight: ${pokemonMoreInfo?.weight.toString()}'),
-                Text('Abilities:'),
-                Column(
-                  children: pokemonMoreInfo!.abilities
-                      .map((ability) => Text(ability.ability.name))
-                      .toList(),
-                ),
-                Text('Stats:'),
-                Column(
-                  children: pokemonMoreInfo.stats
-                      .map((stat) => Text(stat.stat.name))
-                      .toList(),
-                ),
+              title: Text(capitalizeFirstLetter(widget.pokemon.name)),
+              actions: [
+                Text(formatNumber(widget.pokemon.id)),
               ],
+            ),
+            body: Center(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Text('About',
+                      style: headingTextStyle(capitalizeFirstLetter(pokemonMoreInfo!.types[0].type.name)),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.fitness_center,
+                                color: Colors.grey[800],
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text('${pokemonMoreInfo.height.toString()} kg',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[800],
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text('Weight',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey[400]
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 2,
+                        height: 70,
+                        color: Colors.grey[200],
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.square_foot),
+                              Text('${pokemonMoreInfo.weight.toString()} m'),
+                            ],
+                          ),
+                          Text('Height'),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         }

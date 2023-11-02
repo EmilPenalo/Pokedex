@@ -11,8 +11,8 @@ Row pokemonTypes(String type1, String type2) {
       fontWeight: FontWeight.w900
   );
 
-  var colorType1 = getColor(type1);
-  var colorType2 = type2.isNotEmpty ? getColor(type2) : null;
+  var colorType1 = getPokemonTypeColor(type1);
+  var colorType2 = type2.isNotEmpty ? getPokemonTypeColor(type2) : null;
 
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +66,7 @@ Row pokemonTypes(String type1, String type2) {
   );
 }
 
-Color getColor(String type) {
+Color getPokemonTypeColor(String type) {
   Color color;
 
   switch (type) {
