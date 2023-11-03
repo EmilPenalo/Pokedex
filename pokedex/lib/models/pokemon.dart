@@ -7,7 +7,7 @@ class Pokemon {
   Pokemon({
     required this.name,
     required this.url,
-    this.isCaptured = false,
+    required this.isCaptured,
   }) {
     id = getId(url);
   }
@@ -40,6 +40,7 @@ class Pokemon {
     return Pokemon(
         name: json['name'] as String,
         url: json['url'] as String,
+        isCaptured: (json['isCaptured'] as int) == 1,
     );
   }
 
@@ -48,7 +49,7 @@ class Pokemon {
       'id': id,
       'name': name,
       'url': url,
-      'isCaptured': isCaptured,
+      'isCaptured': isCaptured ? 1 : 0,
     };
   }
 }

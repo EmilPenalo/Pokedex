@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:pokedex/pages/pokemon_details.dart';
 import '../helpers/text_helper.dart';
 import '../models/pokemon_info.dart';
+import '../ui/Pokemon/captured_icon.dart';
 import '../ui/Pokemon/card_item_widgets.dart';
 import '../helpers/image_helper.dart';
 import '../ui/Pokemon/pokemon_types.dart';
@@ -18,7 +19,7 @@ Future<PokemonInfo> fetchPokemonInfo(String url) {
       final responseData = jsonDecode(response.body);
       return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
     } else {
-      throw Exception('Failed to load pokemonInfo');
+      throw Exception('Failed to load pokemonInfo: $url');
     }
   });
 }
@@ -49,6 +50,7 @@ class _PokemonCardState extends State<PokemonCard> {
   Future<void> onDoubleTap(BuildContext context, Pokemon pokemon) async {
     pokemon.isCaptured = !pokemon.isCaptured;
     await DatabaseHelper.updatePokemon(pokemon);
+
     setState(() {
       pokemon;
     });
@@ -89,8 +91,8 @@ class _PokemonCardState extends State<PokemonCard> {
                         children: [
 
                           // Icono de capturado
-                          if (widget.pokemon.isCaptured)
-                            likedIcon(),
+                          // if(widget.pokemon.isCaptured)
+                          CapturedIcon(captured: widget.pokemon.isCaptured),
 
                           // Numero del Pokemon
                           cardItemNumber(
