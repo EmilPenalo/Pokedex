@@ -10,10 +10,15 @@ import 'style_variables.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     title: 'POKEDEX',
     debugShowCheckedModeBanner: false,
-    home: LoadingScreen(),
+    home: StreamBuilder<int>(
+      stream: DatabaseHelper.progressStream,
+      builder: (context, snapshot) {
+        return LoadingScreen(loadingProgress: snapshot.data ?? 0, totalPokemonCount: DatabaseHelper.totalPokemonCount);
+      },
+    ),
   ));
 
   await DatabaseHelper.fillDatabaseWithPokemon();
@@ -70,7 +75,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             padding: const EdgeInsets.only(top: 10),
-            child: const PokemonList(),
+            child: const PokemonList(captured: false),
           ),
         )
       ),
@@ -80,7 +85,14 @@ class HomePage extends StatelessWidget {
 }
 
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({super.key});
+  final int totalPokemonCount;
+  final int loadingProgress;
+
+  const LoadingScreen({
+    super.key,
+    required this.totalPokemonCount,
+    required this.loadingProgress,
+  });
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
@@ -123,47 +135,69 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor(),
-      body: Center(
-        child: ScaleTransition(
-          scale: _animation,
-          alignment: Alignment.center,
-          child: Container(
-            height: 150,
-            width: 150,
-            alignment: Alignment.center,
-            child: Stack(
+      body: Stack(
+        children: [
+          Center(
+            child: ScaleTransition(
+              scale: _animation,
               alignment: Alignment.center,
-              children: [
+              child: Container(
+                height: 150,
+                width: 150,
+                alignment: Alignment.center,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
 
-                RotationTransition(
-                  turns: _animation,
-                  child: SvgPicture.asset(
-                    'lib/resources/pokeball_icon.svg',
-                    width: 100,
-                    height: 100,
+                    RotationTransition(
+                      turns: _animation,
+                      child: SvgPicture.asset(
+                        'lib/resources/pokeball_icon.svg',
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+
+                    RotationTransition(
+                      turns: _rotateAnimation,
+                      child: SizedBox(
+                        width: 130,
+                        height: 130,
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.blue.shade200,
+                          strokeAlign: CircularProgressIndicator.strokeAlignCenter,
+                          color: Colors.white,
+                          strokeWidth: 5,
+                          strokeCap: StrokeCap.round,
+                          value: 0.5,
+                        ),
+                      )
+                    ),
+                  ],
+                )
+              )
+            ),
+          ),
+
+          Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Center(
+                  child: Text("Loading Pokemons: ${widget.loadingProgress}/${widget.totalPokemonCount}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
-
-                RotationTransition(
-                  turns: _rotateAnimation,
-                  child: SizedBox(
-                    width: 130,
-                    height: 130,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.blue.shade200,
-                      strokeAlign: CircularProgressIndicator.strokeAlignCenter,
-                      color: Colors.white,
-                      strokeWidth: 5,
-                      strokeCap: StrokeCap.round,
-                      value: 0.5,
-                    ),
-                  )
-                )
-
-              ],
-            )
+              )
           )
-        ),
+        ],
       ),
     );
   }

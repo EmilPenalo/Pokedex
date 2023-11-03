@@ -6,7 +6,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'card_item.dart';
 
 class PokemonList extends StatefulWidget {
-  const PokemonList({Key? key}) : super(key: key);
+  final bool captured;
+  const PokemonList({Key? key, required this.captured}) : super(key: key);
 
   @override
   State<PokemonList> createState() => _PokemonListState();
@@ -27,7 +28,12 @@ class _PokemonListState extends State<PokemonList> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await DatabaseHelper.getPokemonPaged(_pageSize, pageKey*_pageSize);
+      final newItems;
+      if (widget.captured) {
+        newItems = await DatabaseHelper.getCapturedPokemonPaged(_pageSize, pageKey * _pageSize);
+      } else {
+        newItems = await DatabaseHelper.getPokemonPaged(_pageSize, pageKey * _pageSize);
+      }
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
