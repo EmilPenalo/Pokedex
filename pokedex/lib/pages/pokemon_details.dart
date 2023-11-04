@@ -227,7 +227,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                       quarterTurns: 1,
                       child: BarChart(
                         BarChartData(
-                          maxY: 100,
+                          maxY: getMaxStatValue(statsMap),
                           minY: 0,
                           gridData: const FlGridData(show: false),
                           borderData: FlBorderData(show: false),
@@ -259,7 +259,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                   toY: baseStat,
                                   backDrawRodData: BackgroundBarChartRodData(
                                     show: true,
-                                    toY: 100,
+                                    toY: getMaxStatValue(statsMap),
                                     color: Colors.grey[200]
                                   ),
                                   color: getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name))),
@@ -278,6 +278,14 @@ class _PokemonInfoState extends State<PokemonDetails> {
       },
     );
   }
+}
+
+double getMaxStatValue(Map<String, double> statsMap) {
+  double maxValue = statsMap.values.reduce((max, value) => value > max ? value : max);
+  if (maxValue < 100) {
+    return 100.0;
+  }
+  return maxValue;
 }
 
 int codeStat(String statName) {
