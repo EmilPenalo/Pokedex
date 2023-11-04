@@ -61,6 +61,8 @@ flutter:
   assets:
     - lib/resources/pokeball.png
     - lib/resources/pokeball_icon.svg
+    - lib/resources/weight.svg
+    - lib/resources/ruler.svg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
