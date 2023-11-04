@@ -7,7 +7,8 @@ import 'card_item.dart';
 
 class PokemonList extends StatefulWidget {
   final bool captured;
-  const PokemonList({Key? key, required this.captured}) : super(key: key);
+  final String searchTerm;
+  const PokemonList({Key? key, required this.captured, required this.searchTerm}) : super(key: key);
 
   @override
   State<PokemonList> createState() => _PokemonListState();
@@ -28,14 +29,9 @@ class _PokemonListState extends State<PokemonList> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems;
-      if (widget.captured) {
-        newItems = await DatabaseHelper.getCapturedPokemonPaged(_pageSize, pageKey * _pageSize);
-      } else {
-        newItems = await DatabaseHelper.getPokemonPaged(_pageSize, pageKey * _pageSize);
-      }
-
+      final List<Pokemon> newItems = await _getPokemonList(pageKey, widget.searchTerm, widget.captured);
       final isLastPage = newItems.length < _pageSize;
+
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
@@ -44,6 +40,18 @@ class _PokemonListState extends State<PokemonList> {
       }
     } catch (error) {
       _pagingController.error = error;
+    }
+  }
+
+  Future<List<Pokemon>> _getPokemonList(int pageKey, String searchTerm, bool captured) async {
+    if (searchTerm.isEmpty) {
+      return captured
+          ? DatabaseHelper.getCapturedPokemonPaged(_pageSize, pageKey * _pageSize)
+          : DatabaseHelper.getPokemonPaged(_pageSize, pageKey * _pageSize);
+    } else {
+      return captured
+          ? DatabaseHelper.searchCapturedPokemonPaged(_pageSize, pageKey * _pageSize, searchTerm)
+          : DatabaseHelper.searchPokemonPaged(_pageSize, pageKey * _pageSize, searchTerm);
     }
   }
 

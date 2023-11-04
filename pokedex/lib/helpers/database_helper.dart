@@ -96,34 +96,39 @@ class DatabaseHelper {
     );
   }
 
-  static Future<List<Pokemon>> getPokemonPaged(int limit, int offset) async {
+  static Future<List<Pokemon>> _queryPokemon(
+      int limit,
+      int offset,
+      String? whereClause,
+      List<dynamic>? whereArgs,
+      ) async {
     final db = await _getDB();
 
-    final List<Map<String, dynamic>> maps = await db.query(
+    List<Map<String, dynamic>> maps = await db.query(
       "Pokemon",
       limit: limit,
       offset: offset,
+      where: whereClause,
+      whereArgs: whereArgs,
     );
 
-    return List.generate(maps.length, (index) =>
-        Pokemon.fromJson(maps[index])
-    );
+    return maps.map((map) => Pokemon.fromJson(map)).toList();
+  }
+
+  static Future<List<Pokemon>> getPokemonPaged(int limit, int offset) async {
+    return _queryPokemon(limit, offset, null, null);
   }
 
   static Future<List<Pokemon>> getCapturedPokemonPaged(int limit, int offset) async {
-    final db = await _getDB();
+    return _queryPokemon(limit, offset, 'isCaptured = ?', [1]);
+  }
 
-    final List<Map<String, dynamic>> maps = await db.query(
-      "Pokemon",
-      limit: limit,
-      offset: offset,
-      where: 'isCaptured = ?',
-      whereArgs: [1],
-    );
+  static Future<List<Pokemon>> searchPokemonPaged(int limit, int offset, String searchTerm) async {
+    return _queryPokemon(limit, offset, 'name LIKE ?', ['%$searchTerm%']);
+  }
 
-    return List.generate(maps.length, (index) =>
-        Pokemon.fromJson(maps[index])
-    );
+  static Future<List<Pokemon>> searchCapturedPokemonPaged(int limit, int offset, String searchTerm) async {
+    return _queryPokemon(limit, offset, 'name LIKE ? AND isCaptured = ?', ['%$searchTerm%', 1]);
   }
 
   // Clear DB para Debugging

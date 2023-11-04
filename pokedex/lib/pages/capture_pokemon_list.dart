@@ -13,7 +13,7 @@ class CapturePokemonList extends StatelessWidget {
         centerTitle: true,
         backgroundColor: primaryColor(),
       ),
-      body: const PokemonList(captured: true)
+      body: const PokemonList(captured: true, searchTerm: "")
     );
   }
 }

@@ -91,7 +91,6 @@ class _PokemonCardState extends State<PokemonCard> {
                         children: [
 
                           // Icono de capturado
-                          // if(widget.pokemon.isCaptured)
                           CapturedIcon(captured: widget.pokemon.isCaptured),
 
                           // Numero del Pokemon
