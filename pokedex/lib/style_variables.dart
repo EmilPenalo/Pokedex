@@ -15,7 +15,7 @@ TextStyle baseTextStyle() {
 
 TextStyle subtitleTextStyle() {
   return TextStyle(
-      color: Colors.grey[600],
+      color: Colors.grey[500],
       fontWeight:FontWeight.w500,
       fontSize: 13
   );

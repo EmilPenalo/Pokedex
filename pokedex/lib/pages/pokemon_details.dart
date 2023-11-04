@@ -82,12 +82,12 @@ class _PokemonInfoState extends State<PokemonDetails> {
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
-              backgroundColor: const Color(0x44000000),
+              backgroundColor: Colors.transparent,
               elevation: 0,
               title: Text(capitalizeFirstLetter(widget.pokemon.name),
                   style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
                   ),
               ),
               actions: [
@@ -99,8 +99,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                       child: Text(
                         formatNumber(widget.pokemon.id),
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
@@ -122,7 +122,25 @@ class _PokemonInfoState extends State<PokemonDetails> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(10, 300, 10, 0),
+                  alignment: Alignment.centerRight,
+                  height: 350,
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Image.asset(
+                          'lib/resources/pokeball.png',
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          fit: BoxFit.contain,
+                          opacity: const AlwaysStoppedAnimation(0.5),
+                          colorBlendMode: BlendMode.srcOver,
+                        ),
+                      ]
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(8, 300, 8, 0),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -135,7 +153,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.fromLTRB(10, 50, 10, 10),
+                            padding: const EdgeInsets.fromLTRB(8, 50, 8, 10),
                             child: Text('About',
                               style: headingTextStyle(pokemonMoreInfo.types[0].type.name)
                             ),
@@ -156,6 +174,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                             height: 20,
                                             colorFilter: ColorFilter.mode(Colors.grey[700]!, BlendMode.srcIn),
                                           ),
+                                          const SizedBox(width: 10),
                                           Text(' ${pokemonMoreInfo.weight.toString()} kg',
                                             style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                                           ) // Text
@@ -187,6 +206,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                             height: 20,
                                             colorFilter: ColorFilter.mode(Colors.grey[700]!, BlendMode.srcIn),
                                           ),
+                                          const SizedBox(width: 10),
                                           Text(' ${pokemonMoreInfo.height.toString()} m',
                                             style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                                           ) // Text
@@ -208,7 +228,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                             child: Column(
                               children: pokemonMoreInfo.abilities.map((ability) {
                                 if (ability.isHidden) {
@@ -280,7 +300,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
                             child: Text('Base Stats',
                                 style: headingTextStyle(pokemonMoreInfo.types[0].type.name)
                             ),
@@ -341,7 +361,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(10, 250, 10, 0),
+                  margin: const EdgeInsets.fromLTRB(8, 250, 8, 0),
                   height: 100,
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -363,10 +383,11 @@ class _PokemonInfoState extends State<PokemonDetails> {
                     ),
                   ),
                 ),
+
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
                   child: SizedBox(
-                    height: 200,
+                    height: 225,
                     child: pokemonImage(pokemonMoreInfo.sprites.other.officialArtwork.frontDefault),
                   ),
                 ),
