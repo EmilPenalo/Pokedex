@@ -42,48 +42,60 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String searchQuery = "";
+
+  @override
   Widget build(BuildContext context) {
-    
+
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder:
-            (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                  context),
-              sliver: SliverAppBar(
-                backgroundColor: primaryColor(),
-                expandedHeight: 300,
-                collapsedHeight: 105,
-                pinned: true,
-                flexibleSpace: headerWidget(context),
+          headerSliverBuilder:
+              (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                    context),
+                sliver: SliverAppBar(
+                  backgroundColor: primaryColor(),
+                  expandedHeight: 300,
+                  collapsedHeight: 105,
+                  pinned: true,
+                  flexibleSpace: headerWidget(context, updateSearchQuery),
+                ),
               ),
-            ),
-          ];
-        },
-        body: Container(
-          padding: const EdgeInsets.only(top: 130),
-          color: primaryColor(),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+            ];
+          },
+          body: Container(
+            padding: const EdgeInsets.only(top: 130),
+            color: primaryColor(),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
+              padding: const EdgeInsets.only(top: 10),
+              child: PokemonList(captured: false, searchTerm: searchQuery),
             ),
-            padding: const EdgeInsets.only(top: 10),
-            child: const PokemonList(captured: false, searchTerm: ""),
-          ),
-        )
+          )
       ),
     );
+  }
 
+  void updateSearchQuery(String query) {
+    setState(() {
+      searchQuery = query;
+    });
   }
 }
 

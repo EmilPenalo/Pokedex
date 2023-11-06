@@ -96,6 +96,7 @@ class DatabaseHelper {
     );
   }
 
+  // Getter de pokemones generico
   static Future<List<Pokemon>> _queryPokemon(
       int limit,
       int offset,
@@ -115,6 +116,7 @@ class DatabaseHelper {
     return maps.map((map) => Pokemon.fromJson(map)).toList();
   }
 
+  // Funciones de getters especificos
   static Future<List<Pokemon>> getPokemonPaged(int limit, int offset) async {
     return _queryPokemon(limit, offset, null, null);
   }
@@ -123,18 +125,37 @@ class DatabaseHelper {
     return _queryPokemon(limit, offset, 'isCaptured = ?', [1]);
   }
 
+  // Busquedas segun id o nombre
   static Future<List<Pokemon>> searchPokemonPaged(int limit, int offset, String searchTerm) async {
-    return _queryPokemon(limit, offset, 'name LIKE ?', ['%$searchTerm%']);
+    if (isNumeric(searchTerm)) {
+      int searchTermAsId = int.parse(searchTerm);
+      return _queryPokemon(limit, offset, 'id = ?', [searchTermAsId]);
+    } else {
+      return _queryPokemon(limit, offset, 'name LIKE ?', ['%$searchTerm%']);
+    }
   }
 
   static Future<List<Pokemon>> searchCapturedPokemonPaged(int limit, int offset, String searchTerm) async {
-    return _queryPokemon(limit, offset, 'name LIKE ? AND isCaptured = ?', ['%$searchTerm%', 1]);
+    if (isNumeric(searchTerm)) {
+      int searchTermAsId = int.parse(searchTerm);
+      return _queryPokemon(limit, offset, 'id = ? AND isCaptured = ?', [searchTermAsId, 1]);
+    } else {
+      return _queryPokemon(limit, offset, 'name LIKE ? AND isCaptured = ?', ['%$searchTerm%', 1]);
+    }
   }
 
   // Clear DB para Debugging
   static Future<void> clearDatabase() async {
     final db = await _getDB();
     await db.delete("Pokemon");
+  }
+
+  // Helper functions
+  static bool isNumeric(String? s) {
+    if (s == null) {
+      return false;
+    }
+    return int.tryParse(s) != null;
   }
 
 }

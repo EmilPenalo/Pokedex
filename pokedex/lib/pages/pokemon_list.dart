@@ -18,11 +18,15 @@ class _PokemonListState extends State<PokemonList> {
   static const _pageSize = 20;
   final PagingController<int, Pokemon> _pagingController = PagingController(firstPageKey: 0);
 
+  late String previousSearchTerm;
+
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
         _fetchPage(pageKey);
     });
+
+    previousSearchTerm = widget.searchTerm;
 
     super.initState();
   }
@@ -56,25 +60,34 @@ class _PokemonListState extends State<PokemonList> {
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator(
-    onRefresh: () => Future.sync(
-          () => _pagingController.refresh(),
-    ),
-    child: PagedGridView<int, Pokemon>(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Pokemon>(
-        animateTransitions: true,
+  Widget build(BuildContext context) {
+    if (previousSearchTerm != widget.searchTerm) {
+      _pagingController.refresh();
+      previousSearchTerm = widget.searchTerm;
+    }
 
-        itemBuilder: (context, item, index) => PokemonCard(
-          pokemon: item,
+    return RefreshIndicator(
+      onRefresh: () =>
+          Future.sync(
+                () => _pagingController.refresh(),
+          ),
+      child: PagedGridView<int, Pokemon>(
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Pokemon>(
+          animateTransitions: true,
+
+          itemBuilder: (context, item, index) =>
+              PokemonCard(
+                pokemon: item,
+              ),
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
         ),
       ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-    ),
-  );
+    );
+  }
 
   @override
   void dispose() {

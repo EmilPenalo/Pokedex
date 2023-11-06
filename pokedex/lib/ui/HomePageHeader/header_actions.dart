@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:pokedex/style_variables.dart';
 
 import '../../pages/capture_pokemon_list.dart';
 import '../../pages/transitions/routes.dart';
@@ -36,7 +37,7 @@ void handleFavoriteButtonClick(BuildContext context) {
   );
 }
 
-Widget searchBar() {
+Widget searchBar(Function(String) onSubmitted) {
   return Container(
     padding: const EdgeInsets.fromLTRB(8, 0, 8, 2),
     height: 45,
@@ -46,28 +47,20 @@ Widget searchBar() {
         borderRadius: BorderRadius.all(Radius.circular(99)),
       ),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Row(
-          children: [
-
-            Flexible(
-              fit: FlexFit.loose,
-              child: Align(
-                alignment: Alignment.center,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    hintStyle: TextStyle(color: Colors.grey[500]),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-
-            Icon(Icons.search_rounded, color: Colors.grey[400])
-          ],
+        padding: const EdgeInsets.fromLTRB(20, 0, 5, 0),
+        child: TextField(
+          style: baseTextStyle(),
+          decoration: InputDecoration(
+            suffixIcon: Icon(Icons.search_rounded, color: Colors.grey[400]),
+            hintText: 'Search',
+            hintStyle: TextStyle(color: Colors.grey[500]),
+            border: InputBorder.none,
+          ),
+          onSubmitted: (value) {
+            onSubmitted(value);
+          },
         ),
-      )
+      ),
     ),
   );
 }

@@ -14,7 +14,7 @@ Row headerBottomBarWidget(BuildContext context) {
   );
 }
 
-Widget expandedHeaderWidget(BuildContext context) {
+Widget expandedHeaderWidget(BuildContext context, Function(String) searchQuery) {
 
   Color bgColor = primaryColor();
   double imageOpacity = 0.4;
@@ -83,7 +83,7 @@ Widget expandedHeaderWidget(BuildContext context) {
             children: [
               Flexible(
                 fit: FlexFit.loose,
-                child: searchBar(),
+                child: searchBar(searchQuery),
               ),
               favoritesActionButton(context),
             ],
@@ -95,7 +95,7 @@ Widget expandedHeaderWidget(BuildContext context) {
   );
 }
 
-Widget headerSmall(BuildContext context) {
+Widget headerSmall(BuildContext context, Function(String) searchQuery) {
   return Column(
     children: [
       AppBar(
@@ -108,12 +108,12 @@ Widget headerSmall(BuildContext context) {
         ],
       ),
 
-      searchBar()
+      searchBar(searchQuery)
     ],
   );
 }
 
-Widget headerWidget(BuildContext context) {
+Widget headerWidget(BuildContext context, Function(String) searchQuery) {
   return LayoutBuilder(
     builder: (context, constraints) {
       double top = constraints.biggest.height;
@@ -125,8 +125,8 @@ Widget headerWidget(BuildContext context) {
         secondCurve: Curves.easeInOutCubic,
         sizeCurve: Curves.easeInOutCubic,
         crossFadeState: isExpanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-        firstChild: isExpanded ? expandedHeaderWidget(context) : const SizedBox(height: 0,),
-        secondChild: headerSmall(context),
+        firstChild: isExpanded ? expandedHeaderWidget(context, searchQuery) : const SizedBox(height: 0,),
+        secondChild: headerSmall(context, searchQuery),
         alignment: Alignment.topCenter,
       );
     },
