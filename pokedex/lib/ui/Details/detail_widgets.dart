@@ -105,7 +105,7 @@ Widget aboutInfoItem({
                 ),
                 const SizedBox(width: 10),
                 Text(' $value $unit',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  style: softerTextStyle(),
                 )
               ],
             ),
@@ -163,7 +163,7 @@ Widget pokemonAbility({required String ability, required Color typeColor}) {
     width: double.infinity,
     child: Text(
       ability,
-      style: baseTextStyle(),
+      style: softerTextStyle(),
     ),
   );
 }

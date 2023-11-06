@@ -11,7 +11,15 @@ TextStyle baseTextStyle() {
   return TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
-      color: Colors.grey[800]
+      color: Colors.grey[700]
+  );
+}
+
+TextStyle softerTextStyle() {
+  return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      color: Colors.grey[600]
   );
 }
 

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_more_info.dart';
@@ -9,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../helpers/image_helper.dart';
 import '../helpers/text_helper.dart';
 import '../ui/Details/detail_widgets.dart';
+import '../ui/Details/stats_graph.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 import 'package:pokedex/pages/loading_screen.dart';
 
@@ -61,6 +61,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
         } else { // snapshot.hasData
           final pokemonMoreInfo = pokemonMoreInfoSnapshot.data;
 
+          // Mapa de stats del pokemon
           Map<String, double> statsMap = {};
           for (var stat in pokemonMoreInfo!.stats) {
             String statName = stat.stat.name;
@@ -68,6 +69,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
             statsMap[statName] = baseStat;
           }
 
+          // Definiendo los colores a utilizar segun los tipos del pokemon
           Color primaryTypeColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name));
           Color secondaryTypeColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name));
 
@@ -76,6 +78,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
           }
 
           return Scaffold(
+
+            // Appbar transparente
             extendBodyBehindAppBar: true,
             appBar: detailsAppBar(
                 name: widget.pokemon.name,
@@ -184,56 +188,11 @@ class _PokemonInfoState extends State<PokemonDetails> {
                           ),
 
                           // Grafico de stats
-                          Container(
-                            height: 300,
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: BarChart(
-                                BarChartData(
-                                  maxY: getMaxStatValue(statsMap),
-                                  minY: 0,
-                                  gridData: const FlGridData(show: false),
-                                  borderData: FlBorderData(show: false),
-                                  titlesData: FlTitlesData(
-                                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                    bottomTitles: AxisTitles(
-                                      sideTitles: SideTitles(
-                                        showTitles: true,
-                                        reservedSize: 50,
-                                        getTitlesWidget: (value, meta) {
-                                          return RotatedBox(
-                                            quarterTurns: -1,
-                                            child: getBottomTiles(value, meta, statsMap, pokemonMoreInfo.types[0].type.name),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                  ),
-                                  barGroups: statsMap.entries.map((entry) {
-                                    String statName = entry.key;
-                                    double baseStat = entry.value;
-                                    int statNameXValue = codeStat(statName);
-                                    return BarChartGroupData(
-                                      x: statNameXValue,
-                                      barRods: [
-                                        BarChartRodData(
-                                          toY: baseStat,
-                                          backDrawRodData: BackgroundBarChartRodData(
-                                            show: true,
-                                            toY: getMaxStatValue(statsMap),
-                                            color: Colors.grey[200]
-                                          ),
-                                          color: getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name))),
-                                      ],
-                                    );
-                                  }).toList()
-                                )
-                              ),
-                            ),
-                          ),
+                          StatsGraph(
+                            statsMap: statsMap,
+                            typeColor: primaryTypeColor,
+                          )
+
                         ]
                       ),
                     ),
@@ -247,86 +206,4 @@ class _PokemonInfoState extends State<PokemonDetails> {
       },
     );
   }
-}
-
-double getMaxStatValue(Map<String, double> statsMap) {
-  double maxValue = statsMap.values.reduce((max, value) => value > max ? value : max);
-  if (maxValue < 100) {
-    return 100.0;
-  }
-  return maxValue;
-}
-
-int codeStat(String statName) {
-  if (statName == "hp") {
-    return 0;
-  } else if (statName == "attack") {
-    return 1;
-  } else if (statName == "defense") {
-    return 2;
-  } else if (statName == "special-attack") {
-    return 3;
-  } else if (statName == "special-defense") {
-    return 4;
-  } else if (statName == "speed") {
-    return 5;
-  }
-
-  return -1;
-}
-
-String decodeStat(int index) {
-  if (index == 0) {
-    return "hp";
-  } else if (index == 1) {
-    return "attack";
-  } else if (index == 2) {
-    return "defense";
-  } else if (index == 3) {
-    return "special-attack";
-  } else if (index == 4) {
-    return "special-defense";
-  } else if (index == 5) {
-    return "speed";
-  }
-
-  return "Nan";
-}
-
-Widget getBottomTiles(double value, TitleMeta meta, Map<String, double> statsMap, String type) {
-  final TextStyle labelStyle = TextStyle(
-    color: getPokemonTypeColor(capitalizeFirstLetter(type)),
-    fontSize: 16.0,
-    fontWeight: FontWeight.w800,
-  );
-
-  final TextStyle valueStyle = TextStyle(
-    color: Colors.grey[600],
-    fontSize: 16.0,
-  );
-
-  final int index = value.toInt();
-  List<String> labelName = ['HP   ', 'ATK   ', 'DEF   ', 'SATK   ', 'SDEF   ', 'SPD   '];
-  final String textContent = labelName[index];
-  final String statValueText = formatNumberStat(statsMap[decodeStat(index)]!.toInt());
-
-  final List<TextSpan> textSpans = [
-    TextSpan(
-      text: textContent,
-      style: labelStyle,
-    ),
-    TextSpan(
-      text: statValueText,
-      style: valueStyle, // Style for the dynamic value
-    ),
-  ];
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    child: RichText(
-      text: TextSpan(
-        children: textSpans,
-      ),
-    ),
-  );
 }
