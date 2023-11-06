@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_more_info.dart';
 import 'package:http/http.dart' as http;
 
 import '../helpers/image_helper.dart';
 import '../helpers/text_helper.dart';
+import '../ui/Details/detail_widgets.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 import 'package:pokedex/pages/loading_screen.dart';
 
@@ -45,23 +45,19 @@ class _PokemonInfoState extends State<PokemonDetails> {
     super.initState();
   }
 
-  TextStyle headingTextStyle(String type) {
-    return TextStyle(
-      color: getPokemonTypeColor(capitalizeFirstLetter(type)),
-      fontSize: 22,
-      fontWeight: FontWeight.w700,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PokemonMoreInfo>(
       future: _futurePokemonMoreInfo,
       builder: (context, pokemonMoreInfoSnapshot) {
         if(pokemonMoreInfoSnapshot.hasError) {
-          return Text('Error: ${pokemonMoreInfoSnapshot.error}');
+          return Center(
+              child: Text('Error: ${pokemonMoreInfoSnapshot.error}')
+          );
+
         } else if (!pokemonMoreInfoSnapshot.hasData) {
           return const LoadingScreen(totalPokemonCount: 0, loadingProgress: 0);
+
         } else { // snapshot.hasData
           final pokemonMoreInfo = pokemonMoreInfoSnapshot.data;
 
@@ -72,75 +68,32 @@ class _PokemonInfoState extends State<PokemonDetails> {
             statsMap[statName] = baseStat;
           }
 
-          Color primaryColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name));
-          Color secondaryColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name));
+          Color primaryTypeColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name));
+          Color secondaryTypeColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name));
 
           if (pokemonMoreInfo.types.length > 1) {
-            secondaryColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[1].type.name));
+            secondaryTypeColor = getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[1].type.name));
           }
 
           return Scaffold(
             extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              title: Text(capitalizeFirstLetter(widget.pokemon.name),
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                  ),
-              ),
-              actions: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 16.0),
-                      child: Text(
-                        formatNumber(widget.pokemon.id),
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            appBar: detailsAppBar(
+                name: widget.pokemon.name,
+                id: widget.pokemon.id
             ),
             body: Stack(
               children: [
-                Positioned(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [primaryColor, secondaryColor],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                    ),
-                  ),
-                ),
+
+                // Fondo decorativo
+                typeGradient(primaryTypeColor, secondaryTypeColor),
+
+                // Imagen decoractiva de pokebola
+                pokeballDecoration(context),
+
+                // Tipos del pokemon
                 Container(
-                  alignment: Alignment.centerRight,
-                  height: 350,
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image.asset(
-                          'lib/resources/pokeball.png',
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          fit: BoxFit.contain,
-                          opacity: const AlwaysStoppedAnimation(0.5),
-                          colorBlendMode: BlendMode.srcOver,
-                        ),
-                      ]
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(8, 300, 8, 0),
+                  margin: const EdgeInsets.fromLTRB(8, 250, 8, 0),
+                  height: 100,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -148,163 +101,89 @@ class _PokemonInfoState extends State<PokemonDetails> {
                       topRight: Radius.circular(20.0),
                     ),
                   ),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(
+                        100, 40, 100, 10),
+                    child: pokemonTypes(
+                      capitalizeFirstLetter(
+                          pokemonMoreInfo.types[0].type.name),
+                      pokemonMoreInfo.types.length >= 2
+                          ? capitalizeFirstLetter(
+                          pokemonMoreInfo.types[1].type.name)
+                          : '',
+                    ),
+                  ),
+                ),
+
+                // Imagen del pokemon
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+                  child: SizedBox(
+                    height: 225,
+                    child: pokemonImage(pokemonMoreInfo.sprites.other.officialArtwork.frontDefault),
+                  ),
+                ),
+
+                // Informacion del pokemon
+                Container(
+                  margin: const EdgeInsets.fromLTRB(8, 335, 8, 0),
+                  color: Colors.white,
                   child: Center(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(8, 50, 8, 10),
-                            child: Text('About',
-                              style: headingTextStyle(pokemonMoreInfo.types[0].type.name)
-                            ),
+
+                          // About Header
+                          detailHeaderConstructor(
+                            title: 'About',
+                            type: pokemonMoreInfo.types[0].type.name,
+                            padding: const EdgeInsets.fromLTRB(20, 5, 20, 20)
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center, // Center the content horizontally
-                                        children: [
-                                          SvgPicture.asset(
-                                            'lib/resources/weight.svg',
-                                            width: 20,
-                                            height: 20,
-                                            colorFilter: ColorFilter.mode(Colors.grey[700]!, BlendMode.srcIn),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(' ${pokemonMoreInfo.weight.toString()} kg',
-                                            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                                          ) // Text
-                                        ],
-                                      ),
-                                      Container(padding: const EdgeInsets.all(10), child: Text('Weight',
-                                        style: TextStyle(color: Colors.grey[400]),
-                                      ))
-                                    ],
-                                  )
-                                ),
-                              ),
-                              Container(
-                                width: 1,
-                                height: 70,
-                                color: Colors.grey[200],
-                              ),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center, // Center the content horizontally
-                                        children: [
-                                          SvgPicture.asset(
-                                            'lib/resources/ruler.svg',
-                                            width: 20,
-                                            height: 20,
-                                            colorFilter: ColorFilter.mode(Colors.grey[700]!, BlendMode.srcIn),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(' ${pokemonMoreInfo.height.toString()} m',
-                                            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                                          ) // Text
-                                        ],
-                                      ),
-                                      Container(padding: const EdgeInsets.all(10), child: Text('Height',
-                                        style: TextStyle(color: Colors.grey[400]),
-                                      ))
-                                    ],
-                                  )
-                                ),
-                              )
-                            ],
+
+                          // Informacion general
+                          aboutInfo(
+                              weight: pokemonMoreInfo.weight.toString(),
+                              height: pokemonMoreInfo.height.toString()
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            child: Text('Abilities',
-                                style: headingTextStyle(pokemonMoreInfo.types[0].type.name)
-                            ),
+
+                          // Abilities Header
+                          detailHeaderConstructor(
+                              title: 'Abilities',
+                              type: pokemonMoreInfo.types[0].type.name
                           ),
+
+                          // Abilities
                           Padding(
                             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                             child: Column(
                               children: pokemonMoreInfo.abilities.map((ability) {
                                 if (ability.isHidden) {
-                                  return Container(
-                                    margin: const EdgeInsets.all(5),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name)),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    width: double.infinity,
-                                    child: Text(
-                                      capitalizeFirstLetter(ability.ability.name),
-                                      style: TextStyle(
-                                        color: Colors.grey[700],
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
+
+                                  return pokemonHiddenAbility(
+                                    ability: capitalizeFirstLetter(ability.ability.name),
+                                    typeColor: primaryTypeColor,
                                   );
+
                                 } else {
-                                  return Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Container(
-                                          margin: const EdgeInsets.all(5),
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(
-                                              color: getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name)),
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            capitalizeFirstLetter(ability.ability.name),
-                                            style: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontSize: 16.0,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          margin: const EdgeInsets.all(5),
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: getPokemonTypeColor(capitalizeFirstLetter(pokemonMoreInfo.types[0].type.name)),
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: const Text(
-                                            "Hidden",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.0,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+
+                                  return pokemonAbility(
+                                    ability: capitalizeFirstLetter(ability.ability.name),
+                                    typeColor: primaryTypeColor,
                                   );
+
                                 }
                               }).toList(),
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
-                            child: Text('Base Stats',
-                                style: headingTextStyle(pokemonMoreInfo.types[0].type.name)
-                            ),
+
+                          // Stats Header
+                          detailHeaderConstructor(
+                              title: 'Base Stats',
+                              type: pokemonMoreInfo.types[0].type.name,
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0)
                           ),
+
+                          // Grafico de stats
                           Container(
                             height: 300,
                             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -360,37 +239,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(8, 250, 8, 0),
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0),
-                    ),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(
-                        100, 40, 100, 10),
-                    child: pokemonTypes(
-                      capitalizeFirstLetter(
-                          pokemonMoreInfo.types[0].type.name),
-                      pokemonMoreInfo.types.length >= 2
-                          ? capitalizeFirstLetter(
-                          pokemonMoreInfo.types[1].type.name)
-                          : '',
-                    ),
-                  ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
-                  child: SizedBox(
-                    height: 225,
-                    child: pokemonImage(pokemonMoreInfo.sprites.other.officialArtwork.frontDefault),
-                  ),
-                ),
               ],
             ),
           );

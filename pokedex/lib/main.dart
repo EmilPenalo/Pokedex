@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/pages/loading_screen.dart';
-
 import 'package:pokedex/pages/pokemon_list.dart';
-
 import 'helpers/database_helper.dart';
 import 'ui/HomePageHeader/header_widgets.dart';
 import 'style_variables.dart';
@@ -10,16 +8,21 @@ import 'style_variables.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MaterialApp(
-    title: 'POKEDEX',
-    debugShowCheckedModeBanner: false,
-    home: StreamBuilder<int>(
-      stream: DatabaseHelper.progressStream,
-      builder: (context, snapshot) {
-        return LoadingScreen(loadingProgress: snapshot.data ?? 0, totalPokemonCount: DatabaseHelper.totalPokemonCount);
-      },
+  runApp(
+    MaterialApp(
+      title: 'POKEDEX',
+      debugShowCheckedModeBanner: false,
+      home: StreamBuilder<int>(
+        stream: DatabaseHelper.progressStream,
+        builder: (context, snapshot) {
+          return LoadingScreen(
+            loadingProgress: snapshot.data ?? 0,
+            totalPokemonCount: DatabaseHelper.totalPokemonCount,
+          );
+        },
+      ),
     ),
-  ));
+  );
 
   await DatabaseHelper.fillDatabaseWithPokemon();
 
@@ -34,7 +37,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'POKEDEX',
       debugShowCheckedModeBanner: false,
-      home: HomePage()
+      home: HomePage(),
     );
   }
 }

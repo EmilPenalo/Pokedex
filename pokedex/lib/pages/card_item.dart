@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pokedex/pages/transitions/routes.dart';
 import '../helpers/database_helper.dart';
 import '../models/pokemon.dart';
 import 'package:http/http.dart' as http;
@@ -39,11 +40,8 @@ class PokemonCard extends StatefulWidget {
 class _PokemonCardState extends State<PokemonCard> {
 
   void onTap(BuildContext context, Pokemon pokemon) {
-    Navigator.of(context)
-        .push(
-        MaterialPageRoute(
-            builder: (context) => PokemonDetails(pokemon: pokemon)
-        )
+    Navigator.of(context).push(
+        createSlideRoute(PokemonDetails(pokemon: pokemon))
     );
   }
 

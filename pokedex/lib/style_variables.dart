@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/ui/Pokemon/pokemon_types.dart';
 
+import 'helpers/text_helper.dart';
+
 Color primaryColor() {
   return const Color.fromRGBO(100, 147, 235, 1);
 }
@@ -23,8 +25,8 @@ TextStyle subtitleTextStyle() {
 
 TextStyle headingTextStyle(String type) {
   return TextStyle(
-    color: getPokemonTypeColor(type),
-    fontSize: 22.0,
-    fontWeight: FontWeight.w800,
+    color: getPokemonTypeColor(capitalizeFirstLetter(type)),
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
   );
 }

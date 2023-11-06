@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../pages/capture_pokemon_list.dart';
+import '../../pages/transitions/routes.dart';
 
 IconButton favoritesActionButton(BuildContext context) {
   return IconButton(
@@ -30,11 +31,8 @@ IconButton favoritesActionButton(BuildContext context) {
 }
 
 void handleFavoriteButtonClick(BuildContext context) {
-  Navigator.of(context)
-  .push(
-    MaterialPageRoute(
-      builder: (context) => const CapturePokemonList()
-    )
+  Navigator.of(context).push(
+      createSlideRoute(const CapturePokemonList())
   );
 }
 
