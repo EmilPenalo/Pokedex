@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/helpers/database_helper.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon_more_info.dart';
 import 'package:http/http.dart' as http;
@@ -38,11 +40,37 @@ class PokemonDetails extends StatefulWidget {
 
 class _PokemonInfoState extends State<PokemonDetails> {
   late Future<PokemonMoreInfo> _futurePokemonMoreInfo;
+  late Pokemon pokemon = widget.pokemon;
+  int totalPokemonCount = DatabaseHelper.totalPokemonCount;
 
   @override
   void initState() {
-    _futurePokemonMoreInfo = fetchPokemonMoreInfo(widget.pokemon.url);
+    _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
     super.initState();
+  }
+
+  void loadPreviousPokemon() async {
+    if (pokemon.id > 1) {
+      final previousPokemon = await DatabaseHelper.getPokemonById(pokemon.id - 1);
+      if (previousPokemon != null) {
+        setState(() {
+          pokemon = previousPokemon;
+          _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
+        });
+      }
+    }
+  }
+
+  void loadNextPokemon() async {
+    if (pokemon.id < totalPokemonCount) {
+      final nextPokemon = await DatabaseHelper.getPokemonById(pokemon.id + 1);
+      if (nextPokemon != null) {
+        setState(() {
+          pokemon = nextPokemon;
+          _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
+        });
+      }
+    }
   }
 
   @override
@@ -82,8 +110,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
             // Appbar transparente
             extendBodyBehindAppBar: true,
             appBar: detailsAppBar(
-                name: widget.pokemon.name,
-                id: widget.pokemon.id
+                name: pokemon.name,
+                id: pokemon.id
             ),
             body: Stack(
               children: [
@@ -125,6 +153,34 @@ class _PokemonInfoState extends State<PokemonDetails> {
                   child: SizedBox(
                     height: 225,
                     child: pokemonImage(pokemonMoreInfo.sprites.other.officialArtwork.frontDefault),
+                  ),
+                ),
+
+                // Navegación entre pokemones
+                Container(
+                  margin: const EdgeInsets.fromLTRB(8, 150, 8, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          icon: const Icon(
+                              Icons.navigate_before_rounded,
+                              size: 35,
+                          ),
+                          color: Colors.white,
+                          disabledColor: Colors.transparent,
+                          onPressed: (pokemon.id > 1) ? loadPreviousPokemon : null,
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                            Icons.navigate_next_rounded,
+                            size: 35,
+                        ),
+                        color: Colors.white,
+                        disabledColor: Colors.transparent,
+                        onPressed: (pokemon.id < totalPokemonCount) ? loadNextPokemon : null,
+                      )
+                    ],
                   ),
                 ),
 

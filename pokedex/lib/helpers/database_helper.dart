@@ -116,7 +116,7 @@ class DatabaseHelper {
     return maps.map((map) => Pokemon.fromJson(map)).toList();
   }
 
-  // Funciones de getters especificos
+  // Funciones de getters generales
   static Future<List<Pokemon>> getPokemonPaged(int limit, int offset) async {
     return _queryPokemon(limit, offset, null, null);
   }
@@ -125,7 +125,18 @@ class DatabaseHelper {
     return _queryPokemon(limit, offset, 'isCaptured = ?', [1]);
   }
 
-  // Busquedas segun id o nombre
+  // Busqueda individual
+  static Future<Pokemon?> getPokemonById(int id) async {
+    final List<Pokemon> pokemonList = await _queryPokemon(1, 0, 'id = ?', [id]);
+
+    if (pokemonList.isNotEmpty) {
+      return pokemonList.first;
+    } else {
+      return null;
+    }
+  }
+
+  // Busquedas paginadas segun id o nombre
   static Future<List<Pokemon>> searchPokemonPaged(int limit, int offset, String searchTerm) async {
     if (isNumeric(searchTerm)) {
       int searchTermAsId = int.parse(searchTerm);
