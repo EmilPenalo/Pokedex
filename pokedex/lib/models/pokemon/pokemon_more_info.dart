@@ -1,9 +1,9 @@
-import 'package:pokedex/models/pokemon_abilities.dart';
-import 'package:pokedex/models/pokemon_moves.dart';
-import 'package:pokedex/models/pokemon_species.dart';
-import 'package:pokedex/models/pokemon_sprites.dart';
-import 'package:pokedex/models/pokemon_stats.dart';
-import 'package:pokedex/models/pokemon_types.dart';
+import 'package:pokedex/models/moves/pokemon_moves.dart';
+import 'package:pokedex/models/pokemon/pokemon_abilities.dart';
+import 'package:pokedex/models/pokemon/pokemon_sprites.dart';
+import 'package:pokedex/models/pokemon/pokemon_stats.dart';
+import 'package:pokedex/models/pokemon/pokemon_types.dart';
+import 'package:pokedex/models/species/pokemon_species.dart';
 
 class PokemonMoreInfo {
   final Sprites sprites;

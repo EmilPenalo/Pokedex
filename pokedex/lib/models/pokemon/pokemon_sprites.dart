@@ -1,4 +1,4 @@
-import 'package:pokedex/models/pokemon_other.dart';
+import 'package:pokedex/models/pokemon/pokemon_other.dart';
 
 class Sprites {
   final Other other;

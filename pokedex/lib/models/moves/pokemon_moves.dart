@@ -1,4 +1,4 @@
-import 'package:pokedex/models/pokemon_move.dart';
+import 'package:pokedex/models/moves/pokemon_move.dart';
 
 class Moves {
   final Move move;

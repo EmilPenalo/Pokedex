@@ -1,4 +1,4 @@
-import 'package:pokedex/models/pokemon_stat.dart';
+import 'package:pokedex/models/pokemon/pokemon_stat.dart';
 
 class Stats {
   final int baseStat;

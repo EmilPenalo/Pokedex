@@ -1,4 +1,4 @@
-import 'package:pokedex/models/pokemon_type.dart';
+import 'package:pokedex/models/pokemon/pokemon_type.dart';
 
 class Types {
   final int slot;
