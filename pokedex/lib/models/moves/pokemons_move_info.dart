@@ -1,5 +1,5 @@
-import 'package:pokedex/models/pokemon_move_damage_class.dart';
-import 'package:pokedex/models/pokemon_type.dart';
+import 'package:pokedex/models/moves/pokemon_move_damage_class.dart';
+import 'package:pokedex/models/pokemon/pokemon_type.dart';
 
 class PokemonMoveInfo {
   final int? accuracy;

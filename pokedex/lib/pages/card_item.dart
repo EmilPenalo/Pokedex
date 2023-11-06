@@ -7,7 +7,7 @@ import '../models/pokemon.dart';
 import 'package:http/http.dart' as http;
 import 'package:pokedex/pages/pokemon_details.dart';
 import '../helpers/text_helper.dart';
-import '../models/pokemon_info.dart';
+import '../models/pokemon/pokemon_info.dart';
 import '../ui/Pokemon/captured_icon.dart';
 import '../ui/Pokemon/card_item_widgets.dart';
 import '../helpers/image_helper.dart';

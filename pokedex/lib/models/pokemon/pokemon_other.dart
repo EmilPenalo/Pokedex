@@ -1,4 +1,4 @@
-import 'package:pokedex/models/pokemon_official_artwork.dart';
+import 'package:pokedex/models/pokemon/pokemon_official_artwork.dart';
 
 class Other {
   final OfficialArtwork officialArtwork;

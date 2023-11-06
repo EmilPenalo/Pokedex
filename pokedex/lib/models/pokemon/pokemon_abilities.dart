@@ -1,4 +1,4 @@
-import 'package:pokedex/models/pokemon_ability.dart';
+import 'package:pokedex/models/pokemon/pokemon_ability.dart';
 
 class Abilities {
   final Ability ability;

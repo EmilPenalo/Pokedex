@@ -1,5 +1,5 @@
-import 'package:pokedex/models/pokemon_sprites.dart';
-import 'package:pokedex/models/pokemon_types.dart';
+import 'package:pokedex/models/pokemon/pokemon_sprites.dart';
+import 'package:pokedex/models/pokemon/pokemon_types.dart';
 
 class PokemonInfo {
   final Sprites sprites;
