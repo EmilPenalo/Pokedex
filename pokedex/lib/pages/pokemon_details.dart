@@ -200,38 +200,6 @@ class _PokemonInfoState extends State<PokemonDetails> {
                         ),
                       ),
 
-                      // Navegación entre pokemones
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(8, 150, 8, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.navigate_before_rounded,
-                                size: 35,
-                              ),
-                              color: Colors.white,
-                              disabledColor: Colors.transparent,
-                              onPressed: (pokemon.id > 1)
-                                  ? loadPreviousPokemon
-                                  : null,
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.navigate_next_rounded,
-                                size: 35,
-                              ),
-                              color: Colors.white,
-                              disabledColor: Colors.transparent,
-                              onPressed: (pokemon.id < totalPokemonCount)
-                                  ? loadNextPokemon
-                                  : null,
-                            )
-                          ],
-                        ),
-                      ),
-
                       // Información
                       PageView(
                         controller: _controller,
@@ -246,110 +214,113 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                 )
                             ),
                             child: Center(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
 
-                                    // About Header
-                                    detailHeaderConstructor(
+                                      // About Header
+                                      detailHeaderConstructor(
                                         title: 'About',
                                         type: pokemonMoreInfo.types[0].type.name,
-                                        padding: const EdgeInsets.all(20)
-                                    ),
+                                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20)
+                                      ),
 
-                                    // Informacion general
-                                    aboutInfo(
-                                        weight: pokemonMoreInfo.weight
-                                            .toString(),
-                                        height: pokemonMoreInfo.height
-                                            .toString()
-                                    ),
+                                      // Informacion general
+                                      aboutInfo(
+                                          weight: pokemonMoreInfo.weight
+                                              .toString(),
+                                          height: pokemonMoreInfo.height
+                                              .toString()
+                                      ),
 
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                                      child: Text(
-                                        pokemonSpeciesInfo!.firstEnglishFlavorText!.flavorText,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.grey[700]
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                                        child: Text(
+                                          pokemonSpeciesInfo!.firstEnglishFlavorText!.flavorText,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.grey[700]
+                                          ),
                                         ),
                                       ),
-                                    ),
 
-                                    // Abilities Header
-                                    detailHeaderConstructor(
-                                        title: 'Abilities',
-                                        type: pokemonMoreInfo.types[0].type.name
-                                    ),
-
-                                    // Abilities
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          8, 0, 8, 0),
-                                      child: Column(
-                                        children: pokemonMoreInfo.abilities
-                                            .map((ability) {
-                                          if (ability.isHidden) {
-                                            return pokemonHiddenAbility(
-                                              ability: capitalizeFirstLetter(ability.ability.name),
-                                              typeColor: primaryTypeColor,
-                                            );
-                                          } else {
-                                            return pokemonAbility(
-                                              ability: capitalizeFirstLetter(ability.ability.name),
-                                              typeColor: primaryTypeColor,
-                                            );
-                                          }
-                                        }).toList(),
+                                      // Abilities Header
+                                      detailHeaderConstructor(
+                                          title: 'Abilities',
+                                          type: pokemonMoreInfo.types[0].type.name
                                       ),
-                                    ),
 
-                                    // Stats Header
-                                    detailHeaderConstructor(
-                                        title: 'Base Stats',
-                                        type: pokemonMoreInfo.types[0].type.name,
-                                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0)
-                                    ),
+                                      // Abilities
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 0, 8, 0),
+                                        child: Column(
+                                          children: pokemonMoreInfo.abilities
+                                              .map((ability) {
+                                            if (ability.isHidden) {
+                                              return pokemonHiddenAbility(
+                                                ability: capitalizeFirstLetter(ability.ability.name),
+                                                typeColor: primaryTypeColor,
+                                              );
+                                            } else {
+                                              return pokemonAbility(
+                                                ability: capitalizeFirstLetter(ability.ability.name),
+                                                typeColor: primaryTypeColor,
+                                              );
+                                            }
+                                          }).toList(),
+                                        ),
+                                      ),
 
-                                    // Grafico de stats
-                                    StatsGraph(
-                                      statsMap: statsMap,
-                                      typeColor: primaryTypeColor,
-                                    ),
+                                      // Stats Header
+                                      detailHeaderConstructor(
+                                          title: 'Base Stats',
+                                          type: pokemonMoreInfo.types[0].type.name,
+                                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0)
+                                      ),
 
-                                    detailHeaderConstructor(
-                                        title: 'Breeding',
-                                        type: pokemonMoreInfo.types[0].type.name,
-                                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20)
-                                    ),
+                                      // Grafico de stats
+                                      StatsGraph(
+                                        statsMap: statsMap,
+                                        typeColor: primaryTypeColor,
+                                      ),
 
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                                      child: Row(
-                                        children: [
-                                          for (var eggGroup in pokemonSpeciesInfo.eggGroups)
-                                            Expanded(
-                                              child: Container(
-                                                margin: const EdgeInsets.all(5),
-                                                padding: const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                    color: primaryTypeColor,
-                                                    width: 1,
+                                      detailHeaderConstructor(
+                                          title: 'Breeding',
+                                          type: pokemonMoreInfo.types[0].type.name,
+                                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20)
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                        child: Row(
+                                          children: [
+                                            for (var eggGroup in pokemonSpeciesInfo.eggGroups)
+                                              Expanded(
+                                                child: Container(
+                                                  margin: const EdgeInsets.all(5),
+                                                  padding: const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(
+                                                      color: primaryTypeColor,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                                  width: double.infinity,
+                                                  child: Text(
+                                                    capitalizeFirstLetter(eggGroup.name),
+                                                    style: softerTextStyle(),
                                                   ),
                                                 ),
-                                                width: double.infinity,
-                                                child: Text(
-                                                  capitalizeFirstLetter(eggGroup.name),
-                                                  style: softerTextStyle(),
-                                                ),
                                               ),
-                                            ),
-                                        ],
-                                      ),
-                                    )
-                                  ]
+                                          ],
+                                        ),
+                                      )
+                                    ]
+                                  ),
                                 ),
                               ),
                             ),
@@ -386,12 +357,12 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                               verticalAlignment: TableCellVerticalAlignment.middle,
                                               child: Container(
                                                 color: Colors.grey.shade200,
-                                                child: Text('Level'),
+                                                child: const Text('Level'),
                                               ),
                                             ),
                                           ]
                                         ),
-                                        TableRow(
+                                        const TableRow(
                                             children: [
                                               TableCell(
                                                 verticalAlignment: TableCellVerticalAlignment.middle,
@@ -408,6 +379,39 @@ class _PokemonInfoState extends State<PokemonDetails> {
                           )
                         ],
                       ),
+
+                      // Navegación entre pokemones
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(8, 150, 8, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.navigate_before_rounded,
+                                size: 35,
+                              ),
+                              color: Colors.white,
+                              disabledColor: Colors.transparent,
+                              onPressed: (pokemon.id > 1)
+                                  ? loadPreviousPokemon
+                                  : null,
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.navigate_next_rounded,
+                                size: 35,
+                              ),
+                              color: Colors.white,
+                              disabledColor: Colors.transparent,
+                              onPressed: (pokemon.id < totalPokemonCount)
+                                  ? loadNextPokemon
+                                  : null,
+                            )
+                          ],
+                        ),
+                      ),
+
                     ],
                   ),
                 );
