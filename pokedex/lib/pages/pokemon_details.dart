@@ -190,7 +190,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                         child: Center(
                           child: SmoothPageIndicator(
                             controller: _controller,
-                            count: 2,
+                            count: 3,
                             effect: const ExpandingDotsEffect(
                               activeDotColor: Colors.white,
                               dotColor: Colors.white54,
@@ -343,40 +343,40 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                         type: pokemonMoreInfo.types[0].type.name,
                                         padding: const EdgeInsets.all(20)
                                     ),
-                                    Table(
-                                      border: TableBorder(
-                                        horizontalInside: BorderSide(
-                                          color: Colors.grey.shade200,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      children: [
-                                        TableRow(
-                                          children: [
-                                            TableCell(
-                                              verticalAlignment: TableCellVerticalAlignment.middle,
-                                              child: Container(
-                                                color: Colors.grey.shade200,
-                                                child: const Text('Level'),
-                                              ),
-                                            ),
-                                          ]
-                                        ),
-                                        const TableRow(
-                                            children: [
-                                              TableCell(
-                                                verticalAlignment: TableCellVerticalAlignment.middle,
-                                                child: Text('Hola'),
-                                              ),
-                                            ]
-                                        ),
-                                      ],
+                                    Center(
+                                      child: Text("Coming soon...", style: baseTextStyle()),
                                     )
                                   ],
                                 ),
                               ),
                             ),
-                          )
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(8, 380, 8, 0),
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)
+                                )
+                            ),
+                            child: Center(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    detailHeaderConstructor(
+                                        title: 'Evolutions',
+                                        type: pokemonMoreInfo.types[0].type.name,
+                                        padding: const EdgeInsets.all(20)
+                                    ),
+                                    Center(
+                                      child: Text("Coming soon...", style: baseTextStyle()),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
 
