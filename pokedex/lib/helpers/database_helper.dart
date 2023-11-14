@@ -29,6 +29,7 @@ class DatabaseHelper {
 
   static Future<void> fillDatabaseWithPokemon() async {
     final db = await _getDB();
+    totalPokemonCount = await getTotalPokemonCount();
 
     final response = await http.get(Uri.parse(
         'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'));
@@ -38,23 +39,25 @@ class DatabaseHelper {
 
       final results = jsonData['results'];
       int loadedPokemonCount = 0;
-      totalPokemonCount = results.length;
 
-      if (results != null && results is List) {
-        for (var pokemonData in results) {
-          final name = pokemonData['name'];
-          final url = pokemonData['url'];
+      if (results.length > totalPokemonCount) {
+        totalPokemonCount = results.length;
+        if (results != null && results is List) {
+          for (var pokemonData in results) {
+            final name = pokemonData['name'];
+            final url = pokemonData['url'];
 
-          final existingPokemon = await db.query("Pokemon",
-              where: 'url = ?', whereArgs: [url]);
+            final existingPokemon = await db.query("Pokemon",
+                where: 'url = ?', whereArgs: [url]);
 
-          if (existingPokemon.isEmpty) {
-            final newPokemon = Pokemon(name: name, url: url, isCaptured: false);
-            await addPokemon(newPokemon);
+            if (existingPokemon.isEmpty) {
+              final newPokemon = Pokemon(name: name, url: url, isCaptured: false);
+              await addPokemon(newPokemon);
+            }
+
+            loadedPokemonCount++;
+            _progressStreamController.add(loadedPokemonCount);
           }
-
-          loadedPokemonCount++;
-          _progressStreamController.add(loadedPokemonCount);
         }
       }
     }
@@ -153,6 +156,16 @@ class DatabaseHelper {
     } else {
       return _queryPokemon(limit, offset, 'name LIKE ? AND isCaptured = ?', ['%$searchTerm%', 1]);
     }
+  }
+
+  // Conteo de pokemons
+  static Future<int> getTotalPokemonCount() async {
+    final db = await _getDB();
+    final count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM Pokemon')
+    );
+
+    return count ?? 0;
   }
 
   // Clear DB para Debugging
