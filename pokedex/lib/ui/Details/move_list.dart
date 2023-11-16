@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -28,16 +29,18 @@ Future<List<PokemonMoveInfo>> fetchPokemonMoveInfo(List<Moves> moves) async {
 
 class MoveList extends StatefulWidget {
   final List<Moves> moves;
-  const MoveList({Key? key, required this.moves}) : super(key: key);
+  final Color color;
+  const MoveList({Key? key, required this.moves, required this.color}) : super(key: key);
 
   @override
-  State<MoveList> createState() => _MoveListState();
+  State<MoveList> createState() => MoveListState();
 }
 
-class _MoveListState extends State<MoveList> {
+class MoveListState extends State<MoveList> {
   static const _pageSize = 5;
   final PagingController<int, PokemonMoveInfo> _pagingController = PagingController(firstPageKey: 0);
   bool _disposed = false;
+  late List<Moves> oldList = List.from(widget.moves);
 
   @override
   void initState() {
@@ -53,6 +56,8 @@ class _MoveListState extends State<MoveList> {
       if (_disposed) {
         return;
       }
+
+      widget.moves.sort((a, b) => a.move.name.compareTo(b.move.name));
 
       final int startIndex = pageKey * _pageSize;
 
@@ -81,6 +86,12 @@ class _MoveListState extends State<MoveList> {
 
   @override
   Widget build(BuildContext context) {
+    if (!listEquals(oldList, widget.moves)) {
+      setState(() {
+        oldList = List.from(widget.moves);
+        _pagingController.refresh();
+      });
+    }
     return RefreshIndicator(
       onRefresh: () =>
           Future.sync(
@@ -96,8 +107,14 @@ class _MoveListState extends State<MoveList> {
               SizedBox(
                 height: 100,
                 child: Card(
-                  color: Colors.blue.shade50,
-                  child: Center(child: Text(item.name)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: widget.color.withOpacity(0.15),
+                    ),
+                    child: Center(
+                      child: Text(item.name),
+                    ),
+                  ),
                 ),
               )
         ),

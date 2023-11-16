@@ -135,7 +135,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
               } else {
                 final pokemonSpeciesInfo = pokemonSpeciesInfoSnapshot.data;
 
-                  return Scaffold(
+                return Scaffold(
 
                         // Appbar transparente
                         extendBodyBehindAppBar: true,
@@ -381,7 +381,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                       ),
                                       Container(
                                         margin: const EdgeInsets.fromLTRB(8, 55, 8, 0),
-                                          child: MoveList(moves: pokemonMoreInfo.moves)
+                                          child: MoveList(moves: pokemonMoreInfo.moves, color: primaryTypeColor)
                                       ),
                                     ],
                                   ),
