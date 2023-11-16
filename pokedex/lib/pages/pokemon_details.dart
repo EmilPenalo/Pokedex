@@ -6,12 +6,11 @@ import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon/pokemon_more_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:pokedex/models/species/pokemon_species_info.dart';
+import 'package:pokedex/ui/Details/move_list.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../helpers/image_helper.dart';
 import '../helpers/text_helper.dart';
-import '../models/moves/pokemon_moves.dart';
-import '../models/moves/pokemons_move_info.dart';
 import '../style_variables.dart';
 import '../ui/Details/detail_widgets.dart';
 import '../ui/Details/stats_graph.dart';
@@ -40,25 +39,6 @@ Future<PokemonSpeciesInfo> fetchPokemonSpeciesInfo(String url) async {
   } else {
     throw Exception('Failed to load PokemonSpeciesInfo');
   }
-}
-
-Future<List<PokemonMoveInfo>> fetchPokemonMoveInfo(List<Moves> moves) async {
-  List<PokemonMoveInfo> results = [];
-
-  for (Moves move in moves) {
-    String url = move.move.url;
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      results.add(PokemonMoveInfo.fromJson(responseData as Map<String, dynamic>));
-    } else {
-      throw Exception('Failed to load PokemonMoveInfo');
-    }
-  }
-
-  return results;
 }
 
 
@@ -155,20 +135,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
               } else {
                 final pokemonSpeciesInfo = pokemonSpeciesInfoSnapshot.data;
 
-                return FutureBuilder<List<PokemonMoveInfo>>(
-                  future: fetchPokemonMoveInfo(pokemonMoreInfo.moves),
-                  builder: (context, pokemonMovesInfoSnapshot) {
-                    if(pokemonMovesInfoSnapshot.hasError) {
-                      return Center(
-                          child: Text('Error: ${pokemonMovesInfoSnapshot.error}')
-                      );
-                    } else if (!pokemonMovesInfoSnapshot.hasData) {
-                      return const LoadingScreen(totalPokemonCount: 0, loadingProgress: 0);
-
-                    } else {
-                      final pokemonMovesInfo = pokemonMovesInfoSnapshot.data;
-
-                      return Scaffold(
+                  return Scaffold(
 
                         // Appbar transparente
                         extendBodyBehindAppBar: true,
@@ -397,34 +364,26 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                           topRight: Radius.circular(20)
                                       )
                                   ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        detailHeaderConstructor(
-                                            title: 'Moves',
-                                            type: pokemonMoreInfo.types[0].type
-                                                .name,
-                                            padding: const EdgeInsets.all(20)
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 0, 8, 0),
-                                          child: Column(
-                                            children: pokemonMovesInfo
-                                                !.map((move) {
-                                              return Row(
-                                                children: [
-                                                  Text(move.name),
-                                                  Text(move.type.name),
-                                                  Text(move.damageClass.name),
-                                                  Text(move.power.toString()),
-                                                ],
-                                              );
-                                            }).toList(),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        left: 0,
+                                        child: Center(
+                                          child: detailHeaderConstructor(
+                                              title: 'Moves',
+                                              type: pokemonMoreInfo.types[0]
+                                                  .type.name,
+                                              padding: const EdgeInsets.all(20)
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.fromLTRB(8, 55, 8, 0),
+                                          child: MoveList(moves: pokemonMoreInfo.moves)
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Container(
@@ -495,9 +454,6 @@ class _PokemonInfoState extends State<PokemonDetails> {
                           ],
                         ),
                       );
-                    }
-                  }
-                );
               }
             }
           );
