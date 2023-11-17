@@ -4,10 +4,12 @@ import 'package:pokedex/models/species/pokemon_species_flavor_text_entries.dart'
 class PokemonSpeciesInfo {
   final List<EggGroups> eggGroups;
   final FlavorTextEntries? firstEnglishFlavorText;
+  final String evolutionChainUrl;
 
   const PokemonSpeciesInfo({
     required this.eggGroups,
-    required this.firstEnglishFlavorText
+    required this.firstEnglishFlavorText,
+    required this.evolutionChainUrl
   });
 
   factory PokemonSpeciesInfo.fromJson(Map<String, dynamic> json) {
@@ -28,7 +30,8 @@ class PokemonSpeciesInfo {
 
     return PokemonSpeciesInfo(
         eggGroups: eggGroups,
-        firstEnglishFlavorText: firstEnglishFlavorText
+        firstEnglishFlavorText: firstEnglishFlavorText,
+        evolutionChainUrl: json['evolution_chain']['url'] as String
     );
   }
 }

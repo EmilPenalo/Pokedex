@@ -167,7 +167,7 @@ class MoveListState extends State<MoveList> {
                             width: double.infinity,
                             child: Text(
                               capitalizeFirstLetter(item.damageClass.name),
-                              style: softerTextStyle(),
+                              style: baseTextStyleButColorType(getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name))),
                             ),
                           )
                       ),

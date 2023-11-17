@@ -41,7 +41,6 @@ Future<PokemonSpeciesInfo> fetchPokemonSpeciesInfo(String url) async {
   }
 }
 
-
 class PokemonDetails extends StatefulWidget {
   final Pokemon pokemon;
 
@@ -447,7 +446,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                               padding: const EdgeInsets.all(20)
                                           ),
                                           Center(
-                                            child: Text("Coming soon...",
+                                            child: Text(pokemonSpeciesInfo.evolutionChainUrl,
                                                 style: baseTextStyle()),
                                           )
                                         ],
