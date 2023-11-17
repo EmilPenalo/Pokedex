@@ -379,8 +379,48 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                           ),
                                         ),
                                       ),
+                                      Positioned(
+                                        top: 45,
+                                        right: 0,
+                                        left: 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  "Move",
+                                                  style: baseTextStyleButColorType(primaryTypeColor),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  "Power",
+                                                  textAlign: TextAlign.center,
+                                                  style: baseTextStyleButColorType(primaryTypeColor),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                    "Acc.",
+                                                    textAlign: TextAlign.center,
+                                                    style: baseTextStyleButColorType(primaryTypeColor)
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                    "PP",
+                                                    textAlign: TextAlign.center,
+                                                    style: baseTextStyleButColorType(primaryTypeColor)
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                       Container(
-                                        margin: const EdgeInsets.fromLTRB(8, 55, 8, 0),
+                                        margin: const EdgeInsets.fromLTRB(8, 85, 8, 0),
                                           child: MoveList(moves: pokemonMoreInfo.moves, color: primaryTypeColor)
                                       ),
                                     ],

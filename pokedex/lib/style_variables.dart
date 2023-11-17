@@ -38,3 +38,11 @@ TextStyle headingTextStyle(String type) {
     fontWeight: FontWeight.w700,
   );
 }
+
+TextStyle baseTextStyleButColorType(Color color) {
+  return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: color
+  );
+}
