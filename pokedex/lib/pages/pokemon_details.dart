@@ -13,6 +13,7 @@ import '../helpers/image_helper.dart';
 import '../helpers/text_helper.dart';
 import '../style_variables.dart';
 import '../ui/Details/detail_widgets.dart';
+import '../ui/Details/evolutions_list.dart';
 import '../ui/Details/stats_graph.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 import 'package:pokedex/pages/loading_screen.dart';
@@ -435,22 +436,20 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                           topRight: Radius.circular(20)
                                       )
                                   ),
-                                  child: Center(
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          detailHeaderConstructor(
-                                              title: 'Evolutions',
-                                              type: pokemonMoreInfo.types[0]
-                                                  .type.name,
-                                              padding: const EdgeInsets.all(20)
-                                          ),
-                                          Center(
-                                            child: Text(pokemonSpeciesInfo.evolutionChainUrl,
-                                                style: baseTextStyle()),
-                                          )
-                                        ],
-                                      ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        detailHeaderConstructor(
+                                            title: 'Evolutions',
+                                            type: pokemonMoreInfo.types[0]
+                                                .type.name,
+                                            padding: const EdgeInsets.all(20)
+                                        ),
+                                        Container(
+                                            margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                            child: EvolutionsList(url: pokemonSpeciesInfo.evolutionChainUrl)
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
