@@ -79,7 +79,6 @@ class _PokemonInfoState extends State<PokemonDetails> {
       final previousPokemon = await DatabaseHelper.getPokemonById(pokemon.id - 1);
       if (previousPokemon != null) {
         setState(() {
-          shiny = false;
           pokemon = previousPokemon;
           _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
         });
@@ -92,7 +91,6 @@ class _PokemonInfoState extends State<PokemonDetails> {
       final nextPokemon = await DatabaseHelper.getPokemonById(pokemon.id + 1);
       if (nextPokemon != null) {
         setState(() {
-          shiny = false;
           pokemon = nextPokemon;
           _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
         });
