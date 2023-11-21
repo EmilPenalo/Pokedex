@@ -6,6 +6,7 @@ import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/models/pokemon/pokemon_more_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:pokedex/models/species/pokemon_species_info.dart';
+import 'package:pokedex/ui/Details/detail_actions.dart';
 import 'package:pokedex/ui/Details/move_list.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -60,6 +61,13 @@ class _PokemonInfoState extends State<PokemonDetails> {
   late Pokemon pokemon = widget.pokemon;
   int totalPokemonCount = DatabaseHelper.totalPokemonCount;
 
+  bool shiny = false;
+  updateShiny() {
+    setState(() {
+      shiny = !shiny;
+    });
+  }
+
   @override
   void initState() {
     _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
@@ -71,6 +79,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
       final previousPokemon = await DatabaseHelper.getPokemonById(pokemon.id - 1);
       if (previousPokemon != null) {
         setState(() {
+          shiny = false;
           pokemon = previousPokemon;
           _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
         });
@@ -83,6 +92,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
       final nextPokemon = await DatabaseHelper.getPokemonById(pokemon.id + 1);
       if (nextPokemon != null) {
         setState(() {
+          shiny = false;
           pokemon = nextPokemon;
           _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
         });
@@ -152,7 +162,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                             // Imagen decoractiva de pokebola
                             pokeballDecoration(context),
 
-                            // Tipos del pokemon
+                            // Box estatico de info general
                             Container(
                               margin: const EdgeInsets.fromLTRB(8, 250, 8, 0),
                               height: 90,
@@ -162,8 +172,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                       Radius.circular(20))
                               ),
                               child: Container(
-                                padding: const EdgeInsets.fromLTRB(
-                                    100, 40, 100, 5),
+                                padding: const EdgeInsets.fromLTRB(100, 40, 100, 5),
                                 child: pokemonTypes(
                                   capitalizeFirstLetter(
                                       pokemonMoreInfo.types[0].type.name),
@@ -172,7 +181,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                       pokemonMoreInfo.types[1].type.name)
                                       : '',
                                 ),
-                              ),
+                              )
                             ),
 
                             // Imagen del pokemon
@@ -181,12 +190,16 @@ class _PokemonInfoState extends State<PokemonDetails> {
                               child: SizedBox(
                                 height: 225,
                                 child: pokemonImage(
-                                    pokemonMoreInfo.sprites.other
-                                        .officialArtwork
-                                        .frontDefault),
+                                    shiny ?
+                                      pokemonMoreInfo.sprites.other
+                                        .officialArtwork.frontShiny
+                                      : pokemonMoreInfo.sprites.other
+                                        .officialArtwork.frontDefault
+                                ),
                               ),
                             ),
 
+                            // Visualizacion de slides
                             Container(
                               width: double.infinity,
                               height: 20,
@@ -456,9 +469,16 @@ class _PokemonInfoState extends State<PokemonDetails> {
                               ],
                             ),
 
+                            // Acciones
+                            Positioned(
+                              top: 58,
+                              right: 3,
+                              child: ShinySelectorButton(shiny: shiny, handler: updateShiny)
+                            ),
+
                             // Navegación entre pokemones
                             Container(
-                              margin: const EdgeInsets.fromLTRB(8, 150, 8, 0),
+                              margin: const EdgeInsets.fromLTRB(4, 150, 4, 0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
