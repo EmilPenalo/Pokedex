@@ -3,7 +3,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pokedex/models/evolutions/pokemon_evolutions_info.dart';
+import '../../helpers/image_helper.dart';
+import '../../helpers/text_helper.dart';
 import '../../models/evolutions/pokemon_evolutions_chain.dart';
+import '../../models/pokemon/pokemon_info.dart';
+import '../../style_variables.dart';
+import '../Pokemon/pokemon_types.dart';
+
+Future<PokemonInfo> fetchPokemonInfo(String url) {
+  final updatedUrl = url.replaceFirst("pokemon-species", "pokemon");
+
+  return http.get(Uri.parse(updatedUrl))
+      .then((response) {
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
+    } else {
+      throw Exception('Failed to load pokemonInfo: $url');
+    }
+  });
+}
 
 Future<PokemonEvolutionsInfo> fetchPokemonEvolutionsInfo(String url) async {
   final response = await http
@@ -27,6 +46,9 @@ class EvolutionsList extends StatefulWidget {
 }
 
 class _EvolutionsListState extends State<EvolutionsList> {
+  // Add a variable to keep track of the previous level
+  int previousLevel = -1;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PokemonEvolutionsInfo>(
@@ -34,10 +56,8 @@ class _EvolutionsListState extends State<EvolutionsList> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
-
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-
         } else {
           final pokemonEvolutionsInfo = snapshot.data;
           return buildEvolutionTree(pokemonEvolutionsInfo!.chain, 0);
@@ -47,25 +67,111 @@ class _EvolutionsListState extends State<EvolutionsList> {
   }
 
   Widget buildEvolutionTree(Chain chain, int level) {
-    return Padding(
-      padding: EdgeInsets.only(left: level * 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(chain.species.name),
-            subtitle: Text(chain.species.url),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FutureBuilder<PokemonInfo>(
+          future: fetchPokemonInfo(chain.species.url),
+          builder: (context, pokemonInfoSnapshot) {
+            if (pokemonInfoSnapshot.hasError) {
+              return Text('Error: ${pokemonInfoSnapshot.error}');
+            } else if (!pokemonInfoSnapshot.hasData) {
+              return const CircularProgressIndicator();
+            } else {
+              final pokemonInfo = pokemonInfoSnapshot.data;
+
+              Color primaryTypeColor =
+              getPokemonTypeColor(capitalizeFirstLetter(pokemonInfo!.types[0].type.name));
+
+              bool showIcon = chain.evolvesTo.isNotEmpty && level != previousLevel;
+              previousLevel = level;
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: primaryTypeColor.withOpacity(0.25),
+                          width: 2,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                                capitalizeFirstLetter(chain.species.name),
+                                textAlign: TextAlign.center,
+                                style: softerTextStyle()
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: pokemonImage(
+                                pokemonInfo.sprites.other.officialArtwork
+                                    .frontDefault),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(75, 10, 75, 10),
+                            child: pokemonTypes(
+                              capitalizeFirstLetter(
+                                  pokemonInfo.types[0].type.name),
+                              pokemonInfo.types.length >= 2
+                                  ? capitalizeFirstLetter(
+                                  pokemonInfo.types[1].type.name)
+                                  : '',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (showIcon)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                height: 2,
+                                color: Colors.grey[100],
+                                margin: const EdgeInsets.fromLTRB(0, 8, 5, 12),
+                              ),
+                            ),
+                            Center(
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.grey[100],
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                height: 2,
+                                color: Colors.grey[100],
+                                margin: const EdgeInsets.fromLTRB(5, 8, 0, 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                  ],
+                ),
+              );
+            }
+          },
+        ),
+        if (chain.evolvesTo.isNotEmpty)
+          Column(
+            children: [
+              for (var nextChain in chain.evolvesTo) buildEvolutionTree(nextChain, level + 1),
+            ],
           ),
-          if (chain.evolvesTo.isNotEmpty)
-            Column(
-              children: [
-                for (var nextChain in chain.evolvesTo)
-                  buildEvolutionTree(nextChain, level + 1),
-              ],
-            ),
-        ],
-      ),
+      ],
     );
   }
 }
-

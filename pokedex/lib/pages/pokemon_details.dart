@@ -454,12 +454,15 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                             title: 'Evolutions',
                                             type: pokemonMoreInfo.types[0]
                                                 .type.name,
-                                            padding: const EdgeInsets.all(20)
+                                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 10)
                                         ),
                                         Container(
-                                            margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                             child: EvolutionsList(url: pokemonSpeciesInfo.evolutionChainUrl)
                                         ),
+                                        const Padding(
+                                          padding: EdgeInsets.only(bottom: 5),
+                                        )
                                       ],
                                     ),
                                   ),
