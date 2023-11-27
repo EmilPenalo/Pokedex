@@ -51,6 +51,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String searchQuery = "";
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                   expandedHeight: 300,
                   collapsedHeight: 105,
                   pinned: true,
-                  flexibleSpace: headerWidget(context, updateSearchQuery),
+                  flexibleSpace: headerWidget(context, updateSearchQuery, searchController),
                 ),
               ),
             ];

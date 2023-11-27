@@ -14,7 +14,7 @@ Row headerBottomBarWidget(BuildContext context) {
   );
 }
 
-Widget expandedHeaderWidget(BuildContext context, Function(String) searchQuery) {
+Widget expandedHeaderWidget(BuildContext context, Function(String) searchQuery, TextEditingController searchController) {
 
   Color bgColor = primaryColor();
   double imageOpacity = 0.4;
@@ -83,7 +83,7 @@ Widget expandedHeaderWidget(BuildContext context, Function(String) searchQuery) 
             children: [
               Flexible(
                 fit: FlexFit.loose,
-                child: searchBar(searchQuery),
+                child: searchBar(searchQuery, searchController),
               ),
               favoritesActionButton(context),
             ],
@@ -95,7 +95,7 @@ Widget expandedHeaderWidget(BuildContext context, Function(String) searchQuery) 
   );
 }
 
-Widget headerSmall(BuildContext context, Function(String) searchQuery) {
+Widget headerSmall(BuildContext context, Function(String) searchQuery, TextEditingController searchController) {
   return Column(
     children: [
       AppBar(
@@ -108,12 +108,12 @@ Widget headerSmall(BuildContext context, Function(String) searchQuery) {
         ],
       ),
 
-      searchBar(searchQuery)
+      searchBar(searchQuery, searchController)
     ],
   );
 }
 
-Widget headerWidget(BuildContext context, Function(String) searchQuery) {
+Widget headerWidget(BuildContext context, Function(String) searchQuery, TextEditingController searchController) {
   return LayoutBuilder(
     builder: (context, constraints) {
       double top = constraints.biggest.height;
@@ -125,9 +125,11 @@ Widget headerWidget(BuildContext context, Function(String) searchQuery) {
         secondCurve: Curves.easeInOutCubic,
         sizeCurve: Curves.easeInOutCubic,
         crossFadeState: isExpanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-        firstChild: isExpanded ? expandedHeaderWidget(context, searchQuery) : const SizedBox(height: 0,),
-        secondChild: headerSmall(context, searchQuery),
         alignment: Alignment.topCenter,
+
+          firstChild: isExpanded ? expandedHeaderWidget(context, searchQuery, searchController) : const SizedBox(height: 0,),
+
+          secondChild: headerSmall(context, searchQuery, searchController),
       );
     },
   );

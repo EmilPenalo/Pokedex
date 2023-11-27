@@ -11,6 +11,7 @@ class CapturePokemonList extends StatefulWidget {
 
 class _CapturePokemonListState extends State<CapturePokemonList> {
   String searchQuery = "";
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class _CapturePokemonListState extends State<CapturePokemonList> {
                   )
                 ]
               ),
-              child: searchBar(updateSearchQuery)
+              child: searchBar(updateSearchQuery, searchController)
             ),
             const SizedBox(height: 10),
 

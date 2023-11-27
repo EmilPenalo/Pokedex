@@ -37,7 +37,7 @@ void handleFavoriteButtonClick(BuildContext context) {
   );
 }
 
-Widget searchBar(Function(String) onSubmitted) {
+Widget searchBar(Function(String) onSubmitted, TextEditingController searchController) {
   return Container(
     padding: const EdgeInsets.fromLTRB(8, 0, 8, 2),
     height: 45,
@@ -49,6 +49,7 @@ Widget searchBar(Function(String) onSubmitted) {
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 0, 5, 0),
         child: TextField(
+          controller: searchController,
           style: baseTextStyle(),
           decoration: InputDecoration(
             suffixIcon: Icon(Icons.search_rounded, color: Colors.grey[400]),
