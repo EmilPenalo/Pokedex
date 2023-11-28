@@ -61,6 +61,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
   late Pokemon pokemon = widget.pokemon;
   int totalPokemonCount = DatabaseHelper.totalPokemonCount;
 
+  bool hasShiny = false;
   bool shiny = false;
   updateShiny() {
     setState(() {
@@ -92,6 +93,18 @@ class _PokemonInfoState extends State<PokemonDetails> {
       if (nextPokemon != null) {
         setState(() {
           pokemon = nextPokemon;
+          _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
+        });
+      }
+    }
+  }
+
+  void loadPokemonByID(int id) async {
+    if (id < totalPokemonCount && id > 1) {
+      final newPokemon = await DatabaseHelper.getPokemonById(id);
+      if (newPokemon != null) {
+        setState(() {
+          pokemon = newPokemon;
           _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
         });
       }
@@ -143,6 +156,9 @@ class _PokemonInfoState extends State<PokemonDetails> {
               } else {
                 final pokemonSpeciesInfo = pokemonSpeciesInfoSnapshot.data;
 
+                if (pokemonMoreInfo.sprites.other.officialArtwork.frontShiny != null) {
+                  hasShiny = true;
+                }
                 return Scaffold(
 
                         // Appbar transparente
@@ -188,9 +204,9 @@ class _PokemonInfoState extends State<PokemonDetails> {
                               child: SizedBox(
                                 height: 225,
                                 child: pokemonImage(
-                                    shiny ?
+                                    (shiny && hasShiny) ?
                                       pokemonMoreInfo.sprites.other
-                                        .officialArtwork.frontShiny
+                                        .officialArtwork.frontShiny!
                                       : pokemonMoreInfo.sprites.other
                                         .officialArtwork.frontDefault
                                 ),
@@ -326,6 +342,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                                       .fromLTRB(20, 0, 20, 20)
                                               ),
 
+                                              // Breeding
                                               Padding(
                                                 padding: const EdgeInsets
                                                     .fromLTRB(10, 0, 10, 10),
@@ -365,6 +382,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                     ),
                                   ),
                                 ),
+
+                                // Slide de Moves
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(
                                       8, 380, 8, 0),
@@ -377,6 +396,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                   ),
                                   child: Stack(
                                     children: [
+
+                                      // Header de Moves
                                       Positioned(
                                         top: 0,
                                         right: 0,
@@ -390,6 +411,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                           ),
                                         ),
                                       ),
+
+                                      // Titulos de tabla
                                       Positioned(
                                         top: 45,
                                         right: 0,
@@ -398,6 +421,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                           padding: const EdgeInsets.all(16.0),
                                           child: Row(
                                             children: [
+
+                                              // Titulos
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
@@ -430,6 +455,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                           ),
                                         ),
                                       ),
+
+                                      // Listado de movimientos paginados
                                       Container(
                                         margin: const EdgeInsets.fromLTRB(8, 85, 8, 0),
                                           child: MoveList(moves: pokemonMoreInfo.moves, color: primaryTypeColor)
@@ -437,6 +464,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                     ],
                                   ),
                                 ),
+
+                                // Slide de Evolutions
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(
                                       8, 380, 8, 0),
@@ -450,16 +479,22 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
+
+                                        // Header de evolutions
                                         detailHeaderConstructor(
                                             title: 'Evolutions',
                                             type: pokemonMoreInfo.types[0]
                                                 .type.name,
                                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 10)
                                         ),
+
+                                        // Listado de evolutions
                                         Container(
                                             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                             child: EvolutionsList(url: pokemonSpeciesInfo.evolutionChainUrl)
                                         ),
+
+                                        // Padding final
                                         const Padding(
                                           padding: EdgeInsets.only(bottom: 5),
                                         )
@@ -484,6 +519,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
                                 children: [
+                                  // Pokemon previo
                                   IconButton(
                                     icon: const Icon(
                                       Icons.navigate_before_rounded,
@@ -495,6 +531,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                         ? loadPreviousPokemon
                                         : null,
                                   ),
+
+                                  // Pokemon siguiente
                                   IconButton(
                                     icon: const Icon(
                                       Icons.navigate_next_rounded,

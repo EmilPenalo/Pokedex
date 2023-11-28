@@ -7,6 +7,7 @@ import 'style_variables.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // DatabaseHelper.clearDatabase();
 
   runApp(
     MaterialApp(

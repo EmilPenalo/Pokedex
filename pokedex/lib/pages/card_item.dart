@@ -13,12 +13,26 @@ import '../ui/Pokemon/card_item_widgets.dart';
 import '../helpers/image_helper.dart';
 import '../ui/Pokemon/pokemon_types.dart';
 
-Future<PokemonInfo> fetchPokemonInfo(String url) {
+Future<PokemonInfo> fetchPokemonInfo(String url, int id) {
   return http.get(Uri.parse(url))
       .then((response) {
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
-      return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
+
+      if (id == 10159) {
+        print(url);
+        print(responseData);
+      }
+
+      var test = PokemonInfo.fromJson(responseData as Map<String, dynamic>);
+
+      if (id == 10159) {
+        print(url);
+        print(responseData);
+        print(test);
+      }
+
+      return test;
     } else {
       throw Exception('Failed to load pokemonInfo: $url');
     }
@@ -61,9 +75,8 @@ class _PokemonCardState extends State<PokemonCard> {
       onDoubleTap: () => onDoubleTap(context, widget.pokemon),
 
       child: FutureBuilder<PokemonInfo>(
-          future: fetchPokemonInfo(widget.pokemon.url),
+          future: fetchPokemonInfo(widget.pokemon.url, widget.pokemon.id),
           builder: (context, pokemonInfoSnapshot) {
-
             if (pokemonInfoSnapshot.hasError) {
               return Text('Error: ${pokemonInfoSnapshot.error}');
 
@@ -72,6 +85,7 @@ class _PokemonCardState extends State<PokemonCard> {
 
             } else { // snapshot.hasData
               final pokemonInfo = pokemonInfoSnapshot.data;
+
               return Stack(
                 children: [
                   Positioned.fill(

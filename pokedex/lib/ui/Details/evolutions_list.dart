@@ -1,40 +1,16 @@
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pokedex/models/evolutions/pokemon_evolutions_info.dart';
+import 'package:pokedex/models/species/pokemon_species.dart';
 import '../../helpers/image_helper.dart';
 import '../../helpers/text_helper.dart';
 import '../../models/evolutions/pokemon_evolutions_chain.dart';
 import '../../models/pokemon/pokemon_info.dart';
 import '../../style_variables.dart';
 import '../Pokemon/pokemon_types.dart';
-
-Future<PokemonInfo> fetchPokemonInfo(String url) {
-  final updatedUrl = url.replaceFirst("pokemon-species", "pokemon");
-
-  return http.get(Uri.parse(updatedUrl))
-      .then((response) {
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
-    } else {
-      throw Exception('Failed to load pokemonInfo: $url');
-    }
-  });
-}
-
-Future<PokemonEvolutionsInfo> fetchPokemonEvolutionsInfo(String url) async {
-  final response = await http
-      .get(Uri.parse(url));
-
-  if (response.statusCode == 200) {
-    final responseData = jsonDecode(response.body);
-    return PokemonEvolutionsInfo.fromJson(responseData as Map<String, dynamic>);
-  } else {
-    throw Exception('Failed to load pokemonEvolutionsInfo');
-  }
-}
 
 class EvolutionsList extends StatefulWidget {
   final String url;
@@ -46,13 +22,56 @@ class EvolutionsList extends StatefulWidget {
 }
 
 class _EvolutionsListState extends State<EvolutionsList> {
-  // Add a variable to keep track of the previous level
+  Future<PokemonInfo> fetchPokemonInfo(String url) {
+    final updatedUrl = url.replaceFirst("pokemon-species", "pokemon");
+
+    return http.get(Uri.parse(updatedUrl))
+        .then((response) {
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return PokemonInfo.fromJson(responseData as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to load pokemonInfo: $url');
+      }
+    });
+  }
+
+  Future<PokemonEvolutionsInfo> fetchPokemonEvolutionsInfo() async {
+    var bytes1 = utf8.encode(widget.url);
+    var digest1 = sha256.convert(bytes1);
+
+    if (digest1 != urlHash) {
+      urlHash = digest1;
+
+      final response = await http
+          .get(Uri.parse(widget.url));
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return PokemonEvolutionsInfo.fromJson(responseData as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to load pokemonEvolutionsInfo');
+      }
+    } else {
+      return evolutionResult;
+    }
+  }
+
   int previousLevel = -1;
+  Digest? urlHash;
+
+  PokemonEvolutionsInfo evolutionResult = PokemonEvolutionsInfo(chain: Chain(
+    evolvesTo: [],
+    species: const Species(
+      name: "Not found",
+      url: "",
+    )
+  ));
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PokemonEvolutionsInfo>(
-      future: fetchPokemonEvolutionsInfo(widget.url),
+      future: fetchPokemonEvolutionsInfo(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -60,7 +79,8 @@ class _EvolutionsListState extends State<EvolutionsList> {
           return Text('Error: ${snapshot.error}');
         } else {
           final pokemonEvolutionsInfo = snapshot.data;
-          return buildEvolutionTree(pokemonEvolutionsInfo!.chain, 0);
+          evolutionResult = pokemonEvolutionsInfo!;
+          return buildEvolutionTree(pokemonEvolutionsInfo.chain, 0);
         }
       },
     );
@@ -145,7 +165,7 @@ class _EvolutionsListState extends State<EvolutionsList> {
                             Center(
                               child: Icon(
                                 Icons.keyboard_arrow_down,
-                                color: Colors.grey[100],
+                                color: Colors.grey[400],
                               ),
                             ),
                             Flexible(

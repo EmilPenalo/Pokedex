@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/style_variables.dart';
 
-Widget pokemonImage(String url) {
+Widget pokemonImage(String? url) {
   return Transform.translate(
       offset: const Offset(0, 5),
-      child: loadImage(url)
+      child: url != null ? loadImage(url) :
+        Container(
+          alignment: Alignment.center,
+          width: 80,
+          child: SvgPicture.asset(
+            'lib/resources/pokeball_icon.svg',
+            color: primaryColor(),
+            fit: BoxFit.contain,
+          ),
+        )
   );
 }
 
