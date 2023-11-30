@@ -302,17 +302,23 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                                       .map((ability) {
                                                     if (ability.isHidden) {
                                                       return pokemonHiddenAbility(
+                                                        name: pokemon.name,
                                                         ability: capitalizeFirstLetter(
                                                             ability.ability
                                                                 .name),
+                                                        url: ability.ability.url,
                                                         typeColor: primaryTypeColor,
+                                                        context: context,
                                                       );
                                                     } else {
                                                       return pokemonAbility(
+                                                        name: pokemon.name,
                                                         ability: capitalizeFirstLetter(
                                                             ability.ability
                                                                 .name),
+                                                        url: ability.ability.url,
                                                         typeColor: primaryTypeColor,
+                                                        context: context,
                                                       );
                                                     }
                                                   }).toList(),

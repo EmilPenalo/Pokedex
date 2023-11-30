@@ -46,3 +46,11 @@ TextStyle baseTextStyleButColorType(Color color) {
       color: color
   );
 }
+
+TextStyle headingTextStyleButColorType(Color color) {
+  return TextStyle(
+    color: color,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+  );
+}

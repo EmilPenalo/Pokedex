@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../helpers/text_helper.dart';
 import '../../style_variables.dart';
+import 'ability_details_sheet.dart';
 
 AppBar detailsAppBar({required String name, required int id}) {
   return AppBar(
@@ -149,31 +150,53 @@ Widget aboutInfo({required String weight, required String height}) {
   );
 }
 
-Widget pokemonAbility({required String ability, required Color typeColor}) {
-  return Container(
-    margin: const EdgeInsets.all(5),
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      border: Border.all(
-        color: typeColor,
-        width: 1,
+Widget pokemonAbility({required String name, required String ability, required String url, required Color typeColor, required BuildContext context}) {
+  return GestureDetector(
+    onTap: () {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return SingleChildScrollView(
+              child: AbilityDetailsSheet(name: name, url: url, ability: ability, typeColor: typeColor)
+          );
+        },
+      );
+    },
+    child: Container(
+      margin: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: typeColor,
+          width: 1,
+        ),
       ),
-    ),
-    width: double.infinity,
-    child: Text(
-      ability,
-      style: softerTextStyle(),
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            ability,
+            style: softerTextStyle(),
+          ),
+          Icon(
+            Icons.info_outline,
+            color: Colors.grey[400],
+          ),
+        ],
+      ),
     ),
   );
 }
 
-Widget pokemonHiddenAbility({required String ability, required Color typeColor}) {
+Widget pokemonHiddenAbility({required String name, required String ability, required String url, required Color typeColor, required BuildContext context}) {
   return Row(
     children: [
       Expanded(
         flex: 2,
-        child: pokemonAbility(ability: ability, typeColor: typeColor)
+        child: pokemonAbility(name: name, ability: ability, url: url, typeColor: typeColor, context: context)
       ),
       Expanded(
         child: Container(
