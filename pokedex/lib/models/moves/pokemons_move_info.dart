@@ -8,6 +8,7 @@ class PokemonMoveInfo {
   final int? power;
   final int pp;
   final Type type;
+  final String contestEffect;
 
   const PokemonMoveInfo({
     required this.accuracy,
@@ -16,6 +17,7 @@ class PokemonMoveInfo {
     required this.power,
     required this.pp,
     required this.type,
+    required this.contestEffect
   });
 
   factory PokemonMoveInfo.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class PokemonMoveInfo {
       power: json['power'] as int?,
       pp: json['pp'] as int,
       type: type,
+      contestEffect: json['contest_effect']['url'] as String
     );
   }
 }

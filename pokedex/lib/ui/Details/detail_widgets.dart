@@ -156,10 +156,10 @@ Widget pokemonAbility({required String name, required String ability, required S
       showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        enableDrag: false,
         builder: (BuildContext context) {
-          return SingleChildScrollView(
-              child: AbilityDetailsSheet(name: name, url: url, ability: ability, typeColor: typeColor)
-          );
+          return AbilityDetailsSheet(name: name, url: url, ability: ability, typeColor: typeColor);
         },
       );
     },
@@ -200,6 +200,7 @@ Widget pokemonHiddenAbility({required String name, required String ability, requ
       ),
       Expanded(
         child: Container(
+          height: 45,
           alignment: Alignment.center,
           margin: const EdgeInsets.all(5),
           padding: const EdgeInsets.all(10),

@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 import '../../style_variables.dart';
 import '../Pokemon/pokemon_types.dart';
+import 'move_details_sheet.dart';
 
 Future<List<PokemonMoveInfo>> fetchPokemonMoveInfo(List<Moves> moves) async {
   List<PokemonMoveInfo> results = [];
@@ -32,9 +33,10 @@ Future<List<PokemonMoveInfo>> fetchPokemonMoveInfo(List<Moves> moves) async {
 }
 
 class MoveList extends StatefulWidget {
+  final String name;
   final List<Moves> moves;
   final Color color;
-  const MoveList({Key? key, required this.moves, required this.color}) : super(key: key);
+  const MoveList({Key? key, required this.name, required this.moves, required this.color}) : super(key: key);
 
   @override
   State<MoveList> createState() => MoveListState();
@@ -115,82 +117,99 @@ class MoveListState extends State<MoveList> {
                     color: Colors.grey[100],
                     margin: const EdgeInsets.fromLTRB(0, 8, 0, 4),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        enableDrag: false,
+                        builder: (BuildContext context) {
+                          return MoveDetailsSheet(name: widget.name, item: item, color: widget.color);
+                        },
+                      );
+                    },
+                    child: Column(
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            capitalizeFirstLetter(item.name),
-                            style: baseTextStyle(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  capitalizeFirstLetter(item.name),
+                                  style: baseTextStyle(),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  item.power?.toString() ?? "-",
+                                  textAlign: TextAlign.center,
+                                  style: softerTextStyle(),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                    item.accuracy?.toString() ?? "-",
+                                    textAlign: TextAlign.center,
+                                    style: softerTextStyle()
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                    item.pp.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: softerTextStyle()
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Expanded(
-                          child: Text(
-                            item.power?.toString() ?? "-",
-                            textAlign: TextAlign.center,
-                            style: softerTextStyle(),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            item.accuracy?.toString() ?? "-",
-                            textAlign: TextAlign.center,
-                            style: softerTextStyle()
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            item.pp.toString(),
-                            textAlign: TextAlign.center,
-                            style: softerTextStyle()
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name)),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  width: double.infinity,
+                                  child: Text(
+                                    capitalizeFirstLetter(item.damageClass.name),
+                                    style: baseTextStyleButColorType(getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name))),
+                                  ),
+                                )
+                            ),
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: widget.color,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  item.type.name.toUpperCase(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 2,
-                          child: Container(
-                            margin: const EdgeInsets.all(5),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name)),
-                                width: 1,
-                              ),
-                            ),
-                            width: double.infinity,
-                            child: Text(
-                              capitalizeFirstLetter(item.damageClass.name),
-                              style: baseTextStyleButColorType(getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name))),
-                            ),
-                          )
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: widget.color,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            item.type.name.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  )
                 ],
               )
         ),

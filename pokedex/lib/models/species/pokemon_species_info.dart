@@ -5,11 +5,13 @@ class PokemonSpeciesInfo {
   final List<EggGroups> eggGroups;
   final FlavorTextEntries? firstEnglishFlavorText;
   final String evolutionChainUrl;
+  final String habitat;
 
   const PokemonSpeciesInfo({
     required this.eggGroups,
     required this.firstEnglishFlavorText,
-    required this.evolutionChainUrl
+    required this.evolutionChainUrl,
+    required this.habitat
   });
 
   factory PokemonSpeciesInfo.fromJson(Map<String, dynamic> json) {
@@ -31,7 +33,8 @@ class PokemonSpeciesInfo {
     return PokemonSpeciesInfo(
         eggGroups: eggGroups,
         firstEnglishFlavorText: firstEnglishFlavorText,
-        evolutionChainUrl: json['evolution_chain']['url'] as String
+        evolutionChainUrl: json['evolution_chain']['url'] as String,
+        habitat: json['habitat']['name'] as String
     );
   }
 }

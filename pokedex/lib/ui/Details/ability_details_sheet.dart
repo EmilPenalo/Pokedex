@@ -57,6 +57,7 @@ class _AbilityDetailsSheetState extends State<AbilityDetailsSheet> {
           return Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   height: 75,

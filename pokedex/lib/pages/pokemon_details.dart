@@ -351,7 +351,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                               // Breeding
                                               Padding(
                                                 padding: const EdgeInsets
-                                                    .fromLTRB(10, 0, 10, 10),
+                                                    .fromLTRB(10, 0, 10, 20),
                                                 child: Row(
                                                   children: [
                                                     for (var eggGroup in pokemonSpeciesInfo
@@ -381,7 +381,44 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                                       ),
                                                   ],
                                                 ),
-                                              )
+                                              ),
+                                              detailHeaderConstructor(
+                                                  title: 'Habitat',
+                                                  type: pokemonMoreInfo.types[0]
+                                                      .type.name,
+                                                  padding: const EdgeInsets
+                                                      .fromLTRB(20, 0, 20, 20)
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets
+                                                    .fromLTRB(10, 0, 10, 10),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(5),
+                                                        padding: const EdgeInsets
+                                                            .all(10),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius
+                                                              .circular(10),
+                                                          border: Border.all(
+                                                            color: primaryTypeColor,
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                        width: double
+                                                            .infinity,
+                                                        child: Text(
+                                                          capitalizeFirstLetter(pokemonSpeciesInfo.habitat),
+                                                          style: softerTextStyle(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ]
                                         ),
                                       ),
@@ -465,7 +502,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                       // Listado de movimientos paginados
                                       Container(
                                         margin: const EdgeInsets.fromLTRB(8, 85, 8, 0),
-                                          child: MoveList(moves: pokemonMoreInfo.moves, color: primaryTypeColor)
+                                          child: MoveList(name: pokemon.name, moves: pokemonMoreInfo.moves, color: primaryTypeColor)
                                       ),
                                     ],
                                   ),
