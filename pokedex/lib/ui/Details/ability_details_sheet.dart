@@ -38,7 +38,13 @@ class _AbilityDetailsSheetState extends State<AbilityDetailsSheet> {
       future: fetchPokemonAbilityInfo(widget.url),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Container(
+            alignment: Alignment.center,
+            // color: Colors.yellow,
+            width: 50,
+            height: 50,
+            child: const CircularProgressIndicator(),
+          );
 
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -54,113 +60,125 @@ class _AbilityDetailsSheetState extends State<AbilityDetailsSheet> {
             }
           }
 
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 75,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: widget.typeColor,
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                      )
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.ability,
-                        style: headingTextStyleButColorType(Colors.white),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          "${capitalizeFirstLetter(addPossessiveSuffix(widget.name))} ability",
-                          style: baseTextStyleButColorType(Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
+          return makeDismissible(
+            context: context,
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      Positioned(
                         child: Container(
+                          height: 75,
                           width: double.infinity,
-                          padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(16)
+                              color: widget.typeColor,
+                              borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                topLeft: Radius.circular(20),
                               )
                           ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Effect",
-                                style: baseTextStyleButColorType(widget.typeColor)
+                                widget.ability,
+                                style: headingTextStyleButColorType(Colors.white),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Text(
-                                  pokemonAbilityInfo?.firstEnglishEffect?.shortEffect ?? 'None',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.grey[700]
-                                  ),
+                                  "${capitalizeFirstLetter(addPossessiveSuffix(widget.name))} ability",
+                                  style: baseTextStyleButColorType(Colors.white),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(16)
-                              )
-                          ),
+                      Container(
+                          color: Colors.white,
                           child: Column(
                             children: [
-                              Text(
-                                  "In-Depth Effect",
-                                  style: baseTextStyleButColorType(widget.typeColor)
-                              ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  pokemonAbilityInfo?.firstEnglishEffect?.effect ?? 'None',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.grey[700]
+                                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(16)
+                                      )
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                          "Effect",
+                                          style: baseTextStyleButColorType(widget.typeColor)
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Text(
+                                          pokemonAbilityInfo?.firstEnglishEffect?.shortEffect ?? 'None',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.grey[700]
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(16)
+                                      )
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                          "In-Depth Effect",
+                                          style: baseTextStyleButColorType(widget.typeColor)
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Text(
+                                          pokemonAbilityInfo?.firstEnglishEffect?.effect ?? 'None',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.grey[700]
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
                             ],
-                          ),
-                        ),
-                      )
+                          )
+                      ),
                     ],
-                  )
-                ),
-              ],
-            ),
+                  ),
+                )
+            )
           );
         }
       },
     );
   }
 }
+
+Widget makeDismissible({required Widget child, required BuildContext context}) => GestureDetector(
+  behavior: HitTestBehavior.opaque,
+  onTap: () => Navigator.of(context).pop(),
+  child: GestureDetector(onTap: () {}, child: child),
+);

@@ -96,7 +96,7 @@ class _EvolutionsListState extends State<EvolutionsList> {
             if (pokemonInfoSnapshot.hasError) {
               return Text('Error: ${pokemonInfoSnapshot.error}');
             } else if (!pokemonInfoSnapshot.hasData) {
-              return const CircularProgressIndicator();
+              return const SizedBox(height: 20);
             } else {
               final pokemonInfo = pokemonInfoSnapshot.data;
 

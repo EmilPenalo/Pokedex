@@ -157,7 +157,6 @@ Widget pokemonAbility({required String name, required String ability, required S
         context: context,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
-        enableDrag: false,
         builder: (BuildContext context) {
           return AbilityDetailsSheet(name: name, url: url, ability: ability, typeColor: typeColor);
         },
