@@ -99,14 +99,16 @@ class _PokemonInfoState extends State<PokemonDetails> {
     }
   }
 
-  void loadPokemonByID(int id) async {
-    if (id < totalPokemonCount && id > 1) {
-      final newPokemon = await DatabaseHelper.getPokemonById(id);
-      if (newPokemon != null) {
-        setState(() {
-          pokemon = newPokemon;
-          _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
-        });
+  void loadPokemonByID(int? id) async {
+    if (id != null) {
+      if (id < totalPokemonCount && id > 1) {
+        final newPokemon = await DatabaseHelper.getPokemonById(id);
+        if (newPokemon != null) {
+          setState(() {
+            pokemon = newPokemon;
+            _futurePokemonMoreInfo = fetchPokemonMoreInfo(pokemon.url);
+          });
+        }
       }
     }
   }
@@ -534,7 +536,10 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                         // Listado de evolutions
                                         Container(
                                             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                            child: EvolutionsList(url: pokemonSpeciesInfo.evolutionChainUrl)
+                                            child: EvolutionsList(
+                                              url: pokemonSpeciesInfo.evolutionChainUrl,
+                                              loadPokemon: loadPokemonByID,
+                                            )
                                         ),
 
                                         // Padding final

@@ -128,12 +128,23 @@ class DatabaseHelper {
     return _queryPokemon(limit, offset, 'isCaptured = ?', [1]);
   }
 
-  // Busqueda individual
+  // Busqueda individual por ID
   static Future<Pokemon?> getPokemonById(int id) async {
     final List<Pokemon> pokemonList = await _queryPokemon(1, 0, 'id = ?', [id]);
 
     if (pokemonList.isNotEmpty) {
       return pokemonList.first;
+    } else {
+      return null;
+    }
+  }
+
+  // Get Pokemon ID por nombre
+  static Future<int?> getPokemonIdByName(String name) async {
+    final List<Pokemon> pokemonList = await _queryPokemon(1, 0, 'name = ?', [name]);
+
+    if (pokemonList.isNotEmpty) {
+      return pokemonList.first.id;
     } else {
       return null;
     }

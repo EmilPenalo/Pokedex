@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pokedex/helpers/database_helper.dart';
 import 'package:pokedex/models/evolutions/pokemon_evolutions_info.dart';
 import 'package:pokedex/models/species/pokemon_species.dart';
 import '../../helpers/image_helper.dart';
@@ -14,8 +15,9 @@ import '../Pokemon/pokemon_types.dart';
 
 class EvolutionsList extends StatefulWidget {
   final String url;
+  final Function loadPokemon;
 
-  const EvolutionsList({super.key, required this.url});
+  const EvolutionsList({super.key, required this.url, required this.loadPokemon});
 
   @override
   State<EvolutionsList> createState() => _EvolutionsListState();
@@ -110,43 +112,48 @@ class _EvolutionsListState extends State<EvolutionsList> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: primaryTypeColor.withOpacity(0.25),
-                          width: 2,
+                    GestureDetector(
+                      onTap: () async {
+                        widget.loadPokemon(await DatabaseHelper.getPokemonIdByName(chain.species.name));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: primaryTypeColor.withOpacity(0.25),
+                            width: 2,
+                          ),
                         ),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                                capitalizeFirstLetter(chain.species.name),
-                                textAlign: TextAlign.center,
-                                style: softerTextStyle()
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                  capitalizeFirstLetter(chain.species.name),
+                                  textAlign: TextAlign.center,
+                                  style: softerTextStyle()
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: pokemonImage(
-                                pokemonInfo.sprites.other.officialArtwork
-                                    .frontDefault),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(75, 10, 75, 10),
-                            child: pokemonTypes(
-                              capitalizeFirstLetter(
-                                  pokemonInfo.types[0].type.name),
-                              pokemonInfo.types.length >= 2
-                                  ? capitalizeFirstLetter(
-                                  pokemonInfo.types[1].type.name)
-                                  : '',
+                            SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: pokemonImage(
+                                  pokemonInfo.sprites.other.officialArtwork
+                                      .frontDefault),
                             ),
-                          ),
-                        ],
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(75, 10, 75, 10),
+                              child: pokemonTypes(
+                                capitalizeFirstLetter(
+                                    pokemonInfo.types[0].type.name),
+                                pokemonInfo.types.length >= 2
+                                    ? capitalizeFirstLetter(
+                                    pokemonInfo.types[1].type.name)
+                                    : '',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     if (showIcon)
