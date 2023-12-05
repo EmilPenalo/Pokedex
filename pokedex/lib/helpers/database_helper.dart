@@ -30,17 +30,22 @@ class DatabaseHelper {
 
     const String apiUrl = 'https://beta.pokeapi.co/graphql/v1beta';
     const String query = '''
-    query samplePokeAPIquery {
-      pokemon: pokemon_v2_pokemon {
-        id
-        name
-        types: pokemon_v2_pokemontypes {
-          type: pokemon_v2_type {
-            name
+      query samplePokeAPIquery {
+        pokemon: pokemon_v2_pokemon {
+          id
+          name
+          types: pokemon_v2_pokemontypes {
+            type: pokemon_v2_type {
+              name
+            }
+          }
+          specie: pokemon_v2_pokemonspecy {
+            gen: pokemon_v2_generation {
+              id
+            }
           }
         }
       }
-    }
   ''';
 
     final Map<String, String> headers = {

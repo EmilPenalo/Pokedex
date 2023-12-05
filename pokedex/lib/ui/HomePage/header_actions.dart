@@ -65,3 +65,20 @@ Widget searchBar(Function(String) onSubmitted, TextEditingController searchContr
     ),
   );
 }
+
+Widget filterBars() {
+  return Row(
+    children: [
+      Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(99)),
+          ),
+          height: 30,
+        ),
+      ),
+    ],
+  );
+}

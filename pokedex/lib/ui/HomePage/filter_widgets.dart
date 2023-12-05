@@ -29,9 +29,18 @@ class _FilterButtonState extends State<FilterButton> {
       context: context,
       backgroundColor: Colors.transparent,
       enableDrag: true,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return filterSheet();
-      },
+        return makeDismissible(
+          context: context,
+          child: DraggableScrollableSheet(
+            maxChildSize: 0.9,
+            expand: false,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return filterSheet(scrollController, context);
+            }),
+        );
+        }
     );
   }
 
@@ -47,7 +56,7 @@ class _FilterButtonState extends State<FilterButton> {
   }
 }
 
-Widget filterSheet() {
+Widget filterSheet(ScrollController controller, BuildContext context) {
   return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
       child: Column(
@@ -75,38 +84,48 @@ Widget filterSheet() {
             width: double.infinity,
             color: Colors.white,
           ),
-          Container(
-            height: 368,
-            width: double.infinity,
-            color: Colors.white,
-            child: ListView.builder(
-                itemCount: pokemonTypesDictionary.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => print(pokemonTypesDictionary[index]),
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: getPokemonTypeColor(pokemonTypesDictionary[index]),
-                          width: 1,
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              child: ListView.builder(
+                  controller: controller,
+                  itemCount: pokemonTypesDictionary.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        print(pokemonTypesDictionary[index]);
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: getPokemonTypeColor(pokemonTypesDictionary[index]),
+                            width: 1,
+                          ),
+                        ),
+                        width: double.infinity,
+                        child: Center(
+                          child: Text(
+                            pokemonTypesDictionary[index],
+                            style: baseTextStyleButColorType(getPokemonTypeColor(pokemonTypesDictionary[index])),
+                          ),
                         ),
                       ),
-                      width: double.infinity,
-                      child: Center(
-                        child: Text(
-                          pokemonTypesDictionary[index],
-                          style: baseTextStyleButColorType(getPokemonTypeColor(pokemonTypesDictionary[index])),
-                        ),
-                      ),
-                    ),
-                  );
-                }
+                    );
+                  }
+              ),
             ),
           )
         ],
       )
   );
 }
+
+Widget makeDismissible({required Widget child, required context}) => GestureDetector(
+  behavior: HitTestBehavior.opaque,
+  onTap: () => Navigator.of(context).pop(),
+  child: GestureDetector(onTap: () {}, child: child),
+);

@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                 sliver: SliverAppBar(
                   backgroundColor: primaryColor(),
                   expandedHeight: 300,
-                  collapsedHeight: 105,
+                  collapsedHeight: 140,
                   pinned: true,
                   flexibleSpace: headerWidget(context, updateSearchQuery, searchController),
                 ),
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
             ];
           },
           body: Container(
-            padding: const EdgeInsets.only(top: 130),
+            padding: const EdgeInsets.only(top: 165),
             color: primaryColor(),
             child: Container(
               decoration: const BoxDecoration(
