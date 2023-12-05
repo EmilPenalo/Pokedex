@@ -30,7 +30,7 @@ class _FilterButtonState extends State<FilterButton> {
       backgroundColor: Colors.transparent,
       enableDrag: true,
       builder: (BuildContext context) {
-        return evolutionSheetPlaceholder(color: primaryColor());
+        return filterSheetPlaceholder();
       },
     );
   }

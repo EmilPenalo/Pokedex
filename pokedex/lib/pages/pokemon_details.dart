@@ -191,12 +191,13 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                 padding: const EdgeInsets.fromLTRB(100, 40, 100, 5),
                                 child: pokemonTypes(
                                   capitalizeFirstLetter(
-                                      pokemonMoreInfo.types[0].type.name),
-                                  pokemonMoreInfo.types.length >= 2
-                                      ? capitalizeFirstLetter(
-                                      pokemonMoreInfo.types[1].type.name)
-                                      : '',
-                                ),
+                                    pokemon.types[0],
+                                  ), pokemon.types.length == 2
+                                    ?
+                                  capitalizeFirstLetter(
+                                    pokemon.types[1],
+                                  ) : '',
+                                )
                               )
                             ),
 

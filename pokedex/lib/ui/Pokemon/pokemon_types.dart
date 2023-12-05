@@ -130,3 +130,25 @@ Color getPokemonTypeColor(String type) {
 
   return color;
 }
+
+List<String> pokemonTypesDictionary = [
+  "All types",
+  "Bug",
+  "Dark",
+  "Dragon",
+  "Electric",
+  "Fairy",
+  "Fighting",
+  "Fire",
+  "Flying",
+  "Ghost",
+  "Normal",
+  "Grass",
+  "Ground",
+  "Ice",
+  "Poison",
+  "Psychic",
+  "Rock",
+  "Steel",
+  "Water",
+];

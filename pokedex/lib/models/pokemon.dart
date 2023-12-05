@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class Pokemon {
   late int id;
   final String name;
   final String url;
   bool isCaptured;
+  late List<String> types = [];
 
   Pokemon({
     required this.name,
@@ -10,6 +14,7 @@ class Pokemon {
     required this.isCaptured,
   }) {
     id = getId(url);
+    fetchTypes();
   }
 
   int getId(String url) {
@@ -36,6 +41,19 @@ class Pokemon {
     }
   }
 
+  Future<void> fetchTypes() async {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      types = (data['types'] as List)
+          .map((type) => type['type']['name'] as String)
+          .toList();
+    } else {
+      throw Exception('Failed to load types');
+    }
+  }
+
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     return Pokemon(
         name: json['name'] as String,
@@ -50,6 +68,7 @@ class Pokemon {
       'name': name,
       'url': url,
       'isCaptured': isCaptured ? 1 : 0,
+      'types': types
     };
   }
 }
