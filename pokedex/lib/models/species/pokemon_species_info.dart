@@ -34,7 +34,7 @@ class PokemonSpeciesInfo {
         eggGroups: eggGroups,
         firstEnglishFlavorText: firstEnglishFlavorText,
         evolutionChainUrl: json['evolution_chain']['url'] as String,
-        habitat: json['habitat']['name'] as String
+        habitat: (json['habitat'] != null ? json['habitat']['name'] : "None") as String
     );
   }
 }

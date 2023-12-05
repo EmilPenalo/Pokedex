@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../../models/moves/pokemon_moves_effect_entries.dart';
 import '../../style_variables.dart';
 import '../Pokemon/pokemon_types.dart';
+import 'detail_widgets.dart';
 
 Future<MoveEffectEntries> fetchMoveEffectEntries(String url) async {
   final response = await http
@@ -36,10 +37,10 @@ class _MoveDetailsSheetState extends State<MoveDetailsSheet> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<MoveEffectEntries>(
-      future: fetchMoveEffectEntries(widget.item.contestEffect),
+      future: fetchMoveEffectEntries(widget.item.contestEffect!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return moveSheetPlaceholder(color: widget.color);
 
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');

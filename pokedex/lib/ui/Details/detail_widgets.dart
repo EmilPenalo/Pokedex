@@ -277,3 +277,171 @@ Widget evolutionSheetPlaceholder({required Color color}) {
     ),
   );
 }
+
+Widget moveSheetPlaceholder({required Color color}) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 75,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              )
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(20, 20, 10, 5),
+                        padding: const EdgeInsets.all(10),
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey.shade200,
+                            width: 1,
+                          ),
+                        ),
+                        width: double.infinity,
+                      )
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.fromLTRB(10, 20, 20, 5),
+                      padding: const EdgeInsets.all(10),
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Type',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.grey[400]
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Category',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.grey[400]
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                          "-",
+                          textAlign: TextAlign.center,
+                          style: softerTextStyle()
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                          "-",
+                          textAlign: TextAlign.center,
+                          style: softerTextStyle()
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                          "-",
+                          textAlign: TextAlign.center,
+                          style: softerTextStyle()
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Power',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.grey[400]
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Accuracy',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.grey[400]
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'PP',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.grey[400]
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Container(
+                          width: double.infinity,
+                          height: 65,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(16)
+                              )
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}

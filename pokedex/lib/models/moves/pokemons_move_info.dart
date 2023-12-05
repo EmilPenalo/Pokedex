@@ -8,7 +8,7 @@ class PokemonMoveInfo {
   final int? power;
   final int pp;
   final Type type;
-  final String contestEffect;
+  final String? contestEffect;
 
   const PokemonMoveInfo({
     required this.accuracy,
@@ -32,7 +32,7 @@ class PokemonMoveInfo {
       power: json['power'] as int?,
       pp: json['pp'] as int,
       type: type,
-      contestEffect: json['contest_effect']['url'] as String
+      contestEffect: (json['contest_effect'] != null ? json['contest_effect']['url'] : "None") as String
     );
   }
 }

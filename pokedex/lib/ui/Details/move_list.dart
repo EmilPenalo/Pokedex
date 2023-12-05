@@ -36,6 +36,7 @@ class MoveList extends StatefulWidget {
   final String name;
   final List<Moves> moves;
   final Color color;
+
   const MoveList({Key? key, required this.name, required this.moves, required this.color}) : super(key: key);
 
   @override
@@ -118,7 +119,7 @@ class MoveListState extends State<MoveList> {
                     margin: const EdgeInsets.fromLTRB(0, 8, 0, 4),
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: item.contestEffect == "None" ? null : () {
                       showModalBottomSheet(
                         context: context,
                         backgroundColor: Colors.transparent,
@@ -169,29 +170,56 @@ class MoveListState extends State<MoveList> {
                         Row(
                           children: [
                             Expanded(
-                                flex: 2,
-                                child: Container(
-                                  margin: const EdgeInsets.all(5),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name)),
-                                      width: 1,
+                              flex: 2,
+                              child: item.contestEffect == "None" ?
+                              Container(
+                                margin: const EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name)),
+                                    width: 1,
+                                  ),
+                                ),
+                                height: 45,
+                                width: double.infinity,
+                                child: Text(
+                                  capitalizeFirstLetter(item.damageClass.name),
+                                  style: baseTextStyleButColorType(getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name))),
+                                ),
+                              ) : Container(
+                                margin: const EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name)),
+                                    width: 1,
+                                  ),
+                                ),
+                                width: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      capitalizeFirstLetter(item.damageClass.name),
+                                      style: baseTextStyleButColorType(getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name))),
                                     ),
-                                  ),
-                                  width: double.infinity,
-                                  child: Text(
-                                    capitalizeFirstLetter(item.damageClass.name),
-                                    style: baseTextStyleButColorType(getPokemonTypeColor(capitalizeFirstLetter(item.damageClass.name))),
-                                  ),
-                                )
+                                    Icon(
+                                      Icons.info_outline,
+                                      color: Colors.grey[400],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                             Expanded(
                               child: Container(
                                 alignment: Alignment.center,
                                 margin: const EdgeInsets.all(5),
                                 padding: const EdgeInsets.all(10),
+                                height: 45,
                                 decoration: BoxDecoration(
                                   color: widget.color,
                                   borderRadius: BorderRadius.circular(10),
