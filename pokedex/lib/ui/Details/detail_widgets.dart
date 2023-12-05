@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../helpers/text_helper.dart';
 import '../../style_variables.dart';
-import '../Pokemon/pokemon_types.dart';
 import 'ability_details_sheet.dart';
 
 AppBar detailsAppBar({required String name, required int id}) {
@@ -444,69 +443,5 @@ Widget moveSheetPlaceholder({required Color color}) {
         )
       ],
     ),
-  );
-}
-
-Widget filterSheetPlaceholder() {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: double.infinity,
-          height: 60,
-          decoration: BoxDecoration(
-              color: primaryColor(),
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-              )
-          ),
-          child: Center(
-            child: Text(
-              'Select type',
-              style: headingTextStyleButColorType(Colors.white),
-            ),
-          ),
-        ),
-        Container(
-          height: 10,
-          width: double.infinity,
-          color: Colors.white,
-        ),
-        Container(
-          height: 400,
-          width: double.infinity,
-          color: Colors.white,
-          child: ListView.builder(
-            itemCount: pokemonTypesDictionary.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () => print(pokemonTypesDictionary[index]),
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: getPokemonTypeColor(pokemonTypesDictionary[index]),
-                      width: 1,
-                    ),
-                  ),
-                  width: double.infinity,
-                  child: Center(
-                    child: Text(
-                      pokemonTypesDictionary[index],
-                      style: baseTextStyleButColorType(getPokemonTypeColor(pokemonTypesDictionary[index])),
-                    ),
-                  ),
-                ),
-              );
-            }
-          ),
-        )
-      ],
-    )
   );
 }

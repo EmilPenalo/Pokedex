@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/style_variables.dart';
-import '../Details/detail_widgets.dart';
+import '../Pokemon/pokemon_types.dart';
 
 class FilterButton extends StatefulWidget {
   const FilterButton({super.key});
@@ -30,7 +30,7 @@ class _FilterButtonState extends State<FilterButton> {
       backgroundColor: Colors.transparent,
       enableDrag: true,
       builder: (BuildContext context) {
-        return filterSheetPlaceholder();
+        return filterSheet();
       },
     );
   }
@@ -45,4 +45,68 @@ class _FilterButtonState extends State<FilterButton> {
       child: buttonIcon,
     );
   }
+}
+
+Widget filterSheet() {
+  return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: double.infinity,
+            height: 60,
+            decoration: BoxDecoration(
+                color: primaryColor(),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(20),
+                )
+            ),
+            child: Center(
+              child: Text(
+                'Select type',
+                style: headingTextStyleButColorType(Colors.white),
+              ),
+            ),
+          ),
+          Container(
+            height: 10,
+            width: double.infinity,
+            color: Colors.white,
+          ),
+          Container(
+            height: 368,
+            width: double.infinity,
+            color: Colors.white,
+            child: ListView.builder(
+                itemCount: pokemonTypesDictionary.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () => print(pokemonTypesDictionary[index]),
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: getPokemonTypeColor(pokemonTypesDictionary[index]),
+                          width: 1,
+                        ),
+                      ),
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          pokemonTypesDictionary[index],
+                          style: baseTextStyleButColorType(getPokemonTypeColor(pokemonTypesDictionary[index])),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+            ),
+          )
+        ],
+      )
+  );
 }

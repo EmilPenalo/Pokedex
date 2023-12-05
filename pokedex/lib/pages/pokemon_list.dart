@@ -72,7 +72,7 @@ class _PokemonListState extends State<PokemonList> {
                 () => _pagingController.refresh(),
           ),
       child: PagedGridView<int, Pokemon>(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 70),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Pokemon>(
           animateTransitions: true,

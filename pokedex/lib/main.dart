@@ -5,6 +5,8 @@ import 'package:pokedex/ui/HomePage/filter_widgets.dart';
 import 'helpers/database_helper.dart';
 import 'ui/HomePage/header_widgets.dart';
 import 'style_variables.dart';
+import 'package:flutter/services.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return const MaterialApp(
       title: 'POKEDEX',
       debugShowCheckedModeBanner: false,

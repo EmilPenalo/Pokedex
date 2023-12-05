@@ -14,7 +14,7 @@ class DatabaseHelper {
     return openDatabase(join(await getDatabasesPath(), _dbName),
       onCreate: (db, version) async => 
       await db.execute(
-        "CREATE TABLE Pokemon(id INTEGER PRIMARY KEY, name TEXT NOT NULL, url TEXT NOT NULL, isCaptured BOOLEAN);"
+        "CREATE TABLE Pokemon(id INTEGER PRIMARY KEY, name TEXT NOT NULL, url TEXT NOT NULL, isCaptured BOOLEAN, type1 TEST NOT NULL, type2 TEXT);"
       ), version: _version
     );
   }
@@ -22,42 +22,81 @@ class DatabaseHelper {
   // Inicialización de DB con pokemones
   static final StreamController<int> _progressStreamController =
   StreamController<int>.broadcast();
-
   static Stream<int> get progressStream => _progressStreamController.stream;
-
   static int totalPokemonCount = 0;
 
   static Future<void> fillDatabaseWithPokemon() async {
     final db = await _getDB();
-    totalPokemonCount = await getTotalPokemonCount();
 
-    final response = await http.get(Uri.parse(
-        'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'));
+    const String apiUrl = 'https://beta.pokeapi.co/graphql/v1beta';
+    const String query = '''
+    query samplePokeAPIquery {
+      pokemon: pokemon_v2_pokemon {
+        id
+        name
+        types: pokemon_v2_pokemontypes {
+          type: pokemon_v2_type {
+            name
+          }
+        }
+      }
+    }
+  ''';
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final Map<String, String> body = {
+      'query': query,
+    };
+
+    totalPokemonCount = await getTotalPokemonCount();
+    int loadedPokemonCount = 0;
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
+      final List<dynamic> pokemonList = jsonData['data']['pokemon'];
 
-      final results = jsonData['results'];
-      int loadedPokemonCount = 0;
+      if (pokemonList.length != totalPokemonCount) {
+        totalPokemonCount = pokemonList.length;
 
-      if (results.length > totalPokemonCount) {
-        totalPokemonCount = results.length;
-        if (results != null && results is List) {
-          for (var pokemonData in results) {
-            final name = pokemonData['name'];
-            final url = pokemonData['url'];
+        for (var pokemonData in pokemonList) {
+          final int id = pokemonData['id'];
+          final String name = pokemonData['name'];
+          final List<dynamic> types = pokemonData['types'];
 
-            final existingPokemon = await db.query("Pokemon",
-                where: 'url = ?', whereArgs: [url]);
+          final existingPokemon = await db.query("Pokemon",
+              where: 'id = ?', whereArgs: [id]);
 
-            if (existingPokemon.isEmpty) {
-              final newPokemon = Pokemon(name: name, url: url, isCaptured: false);
-              await addPokemon(newPokemon);
-            }
-
-            loadedPokemonCount++;
-            _progressStreamController.add(loadedPokemonCount);
+          if (existingPokemon.isEmpty) {
+            final newPokemon = Pokemon(
+                name: name,
+                isCaptured: false,
+                id: id,
+                type1: types[0]['type']['name'],
+                type2: types.length == 2 ? types[1]['type']['name'] : null
+            );
+            addPokemon(newPokemon);
+          } else {
+            final updatedPokemon = Pokemon(
+              name: name,
+              isCaptured: existingPokemon[0]['isCaptured'] == 1,
+              id: id,
+              type1: types[0]['type']['name'],
+              type2: types.length == 2 ? types[1]['type']['name'] : null,
+            );
+            updatePokemon(updatedPokemon);
           }
+
+          loadedPokemonCount++;
+          _progressStreamController.add(loadedPokemonCount);
         }
       }
     }

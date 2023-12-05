@@ -19,18 +19,7 @@ Future<PokemonInfo> fetchPokemonInfo(String url, int id) {
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
 
-      if (id == 10159) {
-        print(url);
-        print(responseData);
-      }
-
       var test = PokemonInfo.fromJson(responseData as Map<String, dynamic>);
-
-      if (id == 10159) {
-        print(url);
-        print(responseData);
-        print(test);
-      }
 
       return test;
     } else {
@@ -141,12 +130,20 @@ class _PokemonCardState extends State<PokemonCard> {
                                 Container(
                                   padding: const EdgeInsets.fromLTRB(
                                       20, 0, 20, 8),
+                                  // child: pokemonTypes(
+                                  //   capitalizeFirstLetter(
+                                  //       pokemonInfo.types[0].type.name),
+                                  //   pokemonInfo.types.length >= 2
+                                  //       ? capitalizeFirstLetter(
+                                  //       pokemonInfo.types[1].type.name)
+                                  //       : '',
+                                  // ),
                                   child: pokemonTypes(
                                     capitalizeFirstLetter(
-                                        pokemonInfo.types[0].type.name),
-                                    pokemonInfo.types.length >= 2
+                                        widget.pokemon.type1),
+                                    widget.pokemon.type2 != null
                                         ? capitalizeFirstLetter(
-                                        pokemonInfo.types[1].type.name)
+                                        widget.pokemon.type2!)
                                         : '',
                                   ),
                                 )
