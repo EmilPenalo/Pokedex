@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/pages/pokemon_list.dart';
-import 'package:pokedex/ui/HomePageHeader/header_actions.dart';
+import 'package:pokedex/ui/HomePage/header_actions.dart';
 import '../style_variables.dart';
 class CapturePokemonList extends StatefulWidget {
   const CapturePokemonList({super.key});

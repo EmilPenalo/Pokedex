@@ -101,7 +101,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
 
   void loadPokemonByID(int? id) async {
     if (id != null) {
-      if (id < totalPokemonCount && id > 1) {
+      if (id <= totalPokemonCount && id > 0) {
         final newPokemon = await DatabaseHelper.getPokemonById(id);
         if (newPokemon != null) {
           setState(() {
@@ -575,8 +575,9 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                     ),
                                     color: Colors.white,
                                     disabledColor: Colors.transparent,
-                                    onPressed: (pokemon.id > 1)
+                                    onPressed: (pokemon.id <= totalPokemonCount) ? (pokemon.id > 1)
                                         ? loadPreviousPokemon
+                                        : null
                                         : null,
                                   ),
 
@@ -588,8 +589,9 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                     ),
                                     color: Colors.white,
                                     disabledColor: Colors.transparent,
-                                    onPressed: (pokemon.id < totalPokemonCount)
+                                    onPressed: (pokemon.id <= totalPokemonCount) ? (pokemon.id < totalPokemonCount)
                                         ? loadNextPokemon
+                                        : null
                                         : null,
                                   )
                                 ],

@@ -220,3 +220,60 @@ Widget pokemonHiddenAbility({required String name, required String ability, requ
     ],
   );
 }
+
+Widget evolutionSheetPlaceholder({required Color color}) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 75,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              )
+          ),
+        ),
+        Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Container(
+                    height: 60,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(16)
+                        )
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(16)
+                        )
+                    ),
+                  ),
+                )
+              ],
+            )
+        ),
+      ],
+    ),
+  );
+}

@@ -6,6 +6,7 @@ import 'package:pokedex/models/pokemon/pokemon_ability_info.dart';
 import 'package:http/http.dart' as http;
 
 import '../../style_variables.dart';
+import 'detail_widgets.dart';
 
 Future<PokemonAbilityInfo> fetchPokemonAbilityInfo(String url) async {
   final response = await http
@@ -38,10 +39,22 @@ class _AbilityDetailsSheetState extends State<AbilityDetailsSheet> {
       future: fetchPokemonAbilityInfo(widget.url),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return evolutionSheetPlaceholder(color: widget.typeColor);
 
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Container(
+              width: double.infinity,
+              height: 300,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                color: Colors.white,
+              ),
+              alignment: Alignment.center,
+            child: Text('Error: ${snapshot.error}')
+          );
 
         } else {
           final pokemonAbilityInfo = snapshot.data;

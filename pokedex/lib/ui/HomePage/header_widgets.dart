@@ -104,7 +104,7 @@ Widget headerSmall(BuildContext context, Function(String) searchQuery, TextEditi
         title: const Text("POKEDEX"),
         centerTitle: true,
         actions: [
-          favoritesActionButton(context)
+          favoritesActionButton(context),
         ],
       ),
 
