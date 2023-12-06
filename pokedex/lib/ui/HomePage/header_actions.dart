@@ -72,38 +72,35 @@ Widget filterBars(BuildContext context) {
       Expanded(
         child: GestureDetector(
           onTap: () {
-            /*
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const FilterButton();
-              },
-            );
-
-             */
+            print("Clicked Gens");
           },
           child: Container(
             margin: const EdgeInsets.fromLTRB(8, 4, 4, 4),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(99)),
+              borderRadius: const BorderRadius.all(Radius.circular(99)),
+              border: Border.all(
+                color: Colors.white,
+                width: 2.0,
+              ),
             ),
             height: 30,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                   child: Text(
                     'All gens',
                     style: softerTextStyle(),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                  padding: const EdgeInsets.only(right: 10),
                   child: Icon(
                     Icons.filter_alt_off,
                     color: Colors.grey[300],
+                    size: 18,
                   ),
                 ),
               ],
@@ -112,31 +109,41 @@ Widget filterBars(BuildContext context) {
         ),
       ),
       Expanded(
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(4, 4, 8, 4),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(99)),
-          ),
-          height: 30,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'All types',
-                  style: softerTextStyle(),
-                ),
+        child: GestureDetector(
+          onTap: () {
+            print("Clicked Types");
+          },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(4, 4, 8, 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(99)),
+              border: Border.all(
+                color: Colors.white,
+                width: 2.0,
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  Icons.filter_alt_off,
-                  color: Colors.grey[300],
+            ),
+            height: 30,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Text(
+                    'All types',
+                    style: softerTextStyle(),
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(
+                    Icons.filter_alt_off,
+                    color: Colors.grey[300],
+                    size: 18,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

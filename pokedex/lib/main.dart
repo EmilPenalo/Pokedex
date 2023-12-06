@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                 sliver: SliverAppBar(
                   backgroundColor: primaryColor(),
                   expandedHeight: 300,
-                  collapsedHeight: 140,
+                  collapsedHeight: 105,
                   pinned: true,
                   flexibleSpace: headerWidget(context, updateSearchQuery, searchController),
                 ),
@@ -83,18 +83,110 @@ class _HomePageState extends State<HomePage> {
             ];
           },
           body: Container(
-            padding: const EdgeInsets.only(top: 170),
+            padding: const EdgeInsets.only(top: 135),
             color: primaryColor(),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            print("Clicked Gens");
+                          },
+                          child: Container (
+                            decoration: BoxDecoration(
+                              // color: const Color.fromRGBO(100, 147, 235, 1),
+                              color: Colors.grey.shade200,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 3,
+                                  blurRadius: 5,
+                                  offset: const Offset(-3, 0),
+                                ),
+                              ],
+                            ),
+
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                  "All Gens",
+                                  style: softerTextStyle(),
+                              )
+                            )
+                          ),
+                        )
+                      ),
+                      Container(
+                        color: Colors.grey.shade300,
+                        width: 1,
+                      ),
+                      Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              print("Clicked Types");
+                            },
+                            child: Container (
+                                decoration: BoxDecoration(
+                                  // color: const Color.fromRGBO(100, 147, 235, 1),
+                                  color: Colors.grey.shade200,
+                                  borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 3,
+                                      blurRadius: 5,
+                                      offset: const Offset(3, 0),
+                                    ),
+                                  ],
+                                ),
+
+                                child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      "All Types",
+                                      style: softerTextStyle(),
+                                    )
+                                )
+                            ),
+                          )
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              padding: const EdgeInsets.only(top: 10),
-              child: PokemonList(captured: false, searchTerm: searchQuery),
+
+                // Listado de Pokemons
+                Container(
+                  margin: const EdgeInsets.only(top: 40),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 7,
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.only(top: 10),
+                  child: PokemonList(captured: false, searchTerm: searchQuery),
+                ),
+              ],
             ),
           ),
       ),

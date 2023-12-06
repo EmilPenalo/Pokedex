@@ -79,13 +79,17 @@ Widget expandedHeaderWidget(BuildContext context, Function(String) searchQuery, 
         child: Container(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(5),
-          child: Row(
+          child: Column(
             children: [
-              Flexible(
-                fit: FlexFit.loose,
-                child: searchBar(searchQuery, searchController),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: searchBar(searchQuery, searchController),
+                  ),
+                  favoritesActionButton(context),
+                ],
               ),
-              favoritesActionButton(context),
             ],
           ),
         ),
@@ -109,7 +113,6 @@ Widget headerSmall(BuildContext context, Function(String) searchQuery, TextEditi
       ),
 
       searchBar(searchQuery, searchController),
-      filterBars(context)
     ],
   );
 }
@@ -118,7 +121,7 @@ Widget headerWidget(BuildContext context, Function(String) searchQuery, TextEdit
   return LayoutBuilder(
     builder: (context, constraints) {
       double top = constraints.biggest.height;
-      bool isExpanded = top > 170;
+      bool isExpanded = top > 160;
 
       return AnimatedCrossFade(
         duration: const Duration(milliseconds: 500),
