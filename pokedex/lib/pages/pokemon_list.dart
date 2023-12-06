@@ -54,25 +54,19 @@ class _PokemonListState extends State<PokemonList> {
   }
 
   Future<List<Pokemon>> _getPokemonList(int pageKey, String searchTerm, bool captured, String type, int gen) async {
-    if (searchTerm.isEmpty) {
-      return captured
-          ? DatabaseHelper.getCapturedPokemonPaged(_pageSize, pageKey * _pageSize)
-          : DatabaseHelper.searchPokemonFilteredPaged(_pageSize, pageKey * _pageSize, searchTerm, type, gen);
-    } else {
-      return captured
-          ? DatabaseHelper.searchCapturedPokemonPaged(_pageSize, pageKey * _pageSize, searchTerm)
-          : DatabaseHelper.searchPokemonFilteredPaged(_pageSize, pageKey * _pageSize, searchTerm, type, gen);
-    }
+    return DatabaseHelper.searchPokemonFilteredPaged(_pageSize, pageKey * _pageSize, searchTerm, type, gen, captured);
   }
 
   @override
   Widget build(BuildContext context) {
     if (previousSearchTerm != widget.searchTerm) {
       _pagingController.refresh();
+
       previousSearchTerm = widget.searchTerm;
     } else if (previousType != widget.type) {
       _pagingController.refresh();
       previousType = widget.type;
+
     } else if (previousGen != widget.gen) {
       _pagingController.refresh();
       previousGen = widget.gen;

@@ -242,6 +242,7 @@ class DatabaseHelper {
       String searchTerm,
       String type,
       int gen,
+      bool isCaptured,
       ) async {
     final db = await _getDB();
 
@@ -258,9 +259,11 @@ class DatabaseHelper {
       whereClause += " AND (type1 = '$type' OR type2 = '$type')";
     }
 
-    if (gen > 0 && gen < 10) {
+    if (gen > 0 && gen <= genCount) {
       whereClause += " AND gen = $gen";
     }
+
+    whereClause += " AND isCaptured = ${isCaptured ? 1 : 0}";
 
     List<Map<String, dynamic>> maps = await db.query(
       "Pokemon",
