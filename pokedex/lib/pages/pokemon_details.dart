@@ -274,19 +274,19 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                                   gen: widget.pokemon.gen
                                               ),
 
-                                              Padding(
-                                                padding: const EdgeInsets
-                                                    .fromLTRB(20, 20, 20, 10),
+                                              pokemonSpeciesInfo?.firstEnglishFlavorText != null &&
+                                                  pokemonSpeciesInfo?.firstEnglishFlavorText?.flavorText != null
+                                                  ? Padding(
+                                                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                                                 child: Text(
-                                                  pokemonSpeciesInfo!
-                                                      .firstEnglishFlavorText!
-                                                      .flavorText,
+                                                  pokemonSpeciesInfo!.firstEnglishFlavorText!.flavorText,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color: Colors.grey[700]
+                                                    color: Colors.grey[700],
                                                   ),
                                                 ),
-                                              ),
+                                              )
+                                                  : Container(),
 
                                               // Abilities Header
                                               detailHeaderConstructor(
@@ -353,40 +353,53 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                               ),
 
                                               // Breeding
-                                              Padding(
-                                                padding: const EdgeInsets
-                                                    .fromLTRB(10, 0, 10, 20),
-                                                child: Row(
-                                                  children: [
-                                                    for (var eggGroup in pokemonSpeciesInfo
-                                                        .eggGroups)
-                                                      Expanded(
-                                                        child: Container(
-                                                          margin: const EdgeInsets
-                                                              .all(5),
-                                                          padding: const EdgeInsets
-                                                              .all(10),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius
-                                                                .circular(10),
-                                                            border: Border.all(
-                                                              color: primaryTypeColor,
-                                                              width: 1,
-                                                            ),
-                                                          ),
-                                                          width: double
-                                                              .infinity,
-                                                          child: Text(
-                                                            capitalizeFirstLetter(
-                                                                eggGroup.name),
-                                                            style: softerTextStyle(),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+                                            child: Row(
+                                              children: [
+                                                if (pokemonSpeciesInfo?.eggGroups.isNotEmpty == true)
+                                                  for (var eggGroup in pokemonSpeciesInfo!.eggGroups)
+                                                    Expanded(
+                                                      child: Container(
+                                                        margin: const EdgeInsets.all(5),
+                                                        padding: const EdgeInsets.all(10),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(10),
+                                                          border: Border.all(
+                                                            color: primaryTypeColor,
+                                                            width: 1,
                                                           ),
                                                         ),
+                                                        width: double.infinity,
+                                                        child: Text(
+                                                          capitalizeFirstLetter(eggGroup.name),
+                                                          style: softerTextStyle(),
+                                                        ),
                                                       ),
-                                                  ],
-                                                ),
-                                              ),
-                                              detailHeaderConstructor(
+                                                    )
+                                                else
+                                                  Expanded(
+                                                    child: Container(
+                                                      margin: const EdgeInsets.all(5),
+                                                      padding: const EdgeInsets.all(10),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        border: Border.all(
+                                                          color: primaryTypeColor,
+                                                          width: 1,
+                                                        ),
+                                                      ),
+                                                      width: double.infinity,
+                                                      child: Text(
+                                                        capitalizeFirstLetter("None"),
+                                                        style: softerTextStyle(),
+                                                      ),
+                                                    ),
+                                                  )
+                                              ],
+                                            ),
+                                          ),
+                                          detailHeaderConstructor(
                                                   title: 'Habitat',
                                                   type: pokemonMoreInfo.types[0]
                                                       .type.name,
@@ -415,7 +428,7 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                                         width: double
                                                             .infinity,
                                                         child: Text(
-                                                          capitalizeFirstLetter(pokemonSpeciesInfo.habitat),
+                                                          capitalizeFirstLetter(pokemonSpeciesInfo!.habitat),
                                                           style: softerTextStyle(),
                                                         ),
                                                       ),

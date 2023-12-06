@@ -216,6 +216,43 @@ class DatabaseHelper {
     }
   }
 
+  // Big Filtering
+  static Future<List<Pokemon>> searchPokemonFilteredPaged(
+      int limit,
+      int offset,
+      String searchTerm,
+      String type,
+      int gen,
+      ) async {
+    final db = await _getDB();
+
+    String whereClause = '1';
+
+    if (isNumeric(searchTerm)) {
+      int searchTermAsId = int.parse(searchTerm);
+      whereClause += ' AND id = $searchTermAsId';
+    } else {
+      whereClause += " AND name LIKE '%$searchTerm%'";
+    }
+
+    if (type.isNotEmpty) {
+      whereClause += " AND (type1 = '$type' OR type2 = '$type')";
+    }
+
+    if (gen > 0 && gen < 10) {
+      whereClause += " AND gen = $gen";
+    }
+
+    List<Map<String, dynamic>> maps = await db.query(
+      "Pokemon",
+      where: whereClause,
+      limit: limit,
+      offset: offset,
+    );
+
+    return maps.map((map) => Pokemon.fromJson(map)).toList();
+  }
+
   // Conteo de pokemons
   static Future<int> getTotalPokemonCount() async {
     final db = await _getDB();

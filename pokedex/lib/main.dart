@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/pages/loading_screen.dart';
 import 'package:pokedex/pages/pokemon_list.dart';
+import 'package:pokedex/ui/HomePage/filter_widgets.dart';
 import 'helpers/database_helper.dart';
 import 'ui/HomePage/header_widgets.dart';
 import 'style_variables.dart';
@@ -87,83 +88,8 @@ class _HomePageState extends State<HomePage> {
             color: primaryColor(),
             child: Stack(
               children: [
-                SizedBox(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            print("Clicked Gens");
-                          },
-                          child: Container (
-                            decoration: BoxDecoration(
-                              // color: const Color.fromRGBO(100, 147, 235, 1),
-                              color: Colors.grey.shade200,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  spreadRadius: 3,
-                                  blurRadius: 5,
-                                  offset: const Offset(-3, 0),
-                                ),
-                              ],
-                            ),
-
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                  "All Gens",
-                                  style: softerTextStyle(),
-                              )
-                            )
-                          ),
-                        )
-                      ),
-                      Container(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                      Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              print("Clicked Types");
-                            },
-                            child: Container (
-                                decoration: BoxDecoration(
-                                  // color: const Color.fromRGBO(100, 147, 235, 1),
-                                  color: Colors.grey.shade200,
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(20),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      spreadRadius: 3,
-                                      blurRadius: 5,
-                                      offset: const Offset(3, 0),
-                                    ),
-                                  ],
-                                ),
-
-                                child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    alignment: Alignment.topCenter,
-                                    child: Text(
-                                      "All Types",
-                                      style: softerTextStyle(),
-                                    )
-                                )
-                            ),
-                          )
-                      ),
-                    ],
-                  ),
-                ),
+                // Filtros
+                const SizedBoxFilter(),
 
                 // Listado de Pokemons
                 Container(

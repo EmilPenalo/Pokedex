@@ -33,7 +33,7 @@ class _PokemonListState extends State<PokemonList> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final List<Pokemon> newItems = await _getPokemonList(pageKey, widget.searchTerm, widget.captured);
+      final List<Pokemon> newItems = await _getPokemonList(pageKey, widget.searchTerm, widget.captured, "", 0);
       final isLastPage = newItems.length < _pageSize;
 
       if (isLastPage) {
@@ -47,15 +47,15 @@ class _PokemonListState extends State<PokemonList> {
     }
   }
 
-  Future<List<Pokemon>> _getPokemonList(int pageKey, String searchTerm, bool captured) async {
+  Future<List<Pokemon>> _getPokemonList(int pageKey, String searchTerm, bool captured, String type, int gen) async {
     if (searchTerm.isEmpty) {
       return captured
           ? DatabaseHelper.getCapturedPokemonPaged(_pageSize, pageKey * _pageSize)
-          : DatabaseHelper.getPokemonPaged(_pageSize, pageKey * _pageSize);
+          : DatabaseHelper.searchPokemonFilteredPaged(_pageSize, pageKey * _pageSize, searchTerm, type, gen);
     } else {
       return captured
           ? DatabaseHelper.searchCapturedPokemonPaged(_pageSize, pageKey * _pageSize, searchTerm)
-          : DatabaseHelper.searchPokemonPaged(_pageSize, pageKey * _pageSize, searchTerm);
+          : DatabaseHelper.searchPokemonFilteredPaged(_pageSize, pageKey * _pageSize, searchTerm, type, gen);
     }
   }
 
