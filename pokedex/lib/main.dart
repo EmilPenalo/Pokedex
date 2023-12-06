@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.initializePreferences();
+
   // DatabaseHelper.clearDatabase();
 
   runApp(
@@ -60,6 +62,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String searchQuery = "";
+  String typeFilter = "";
+  int genFilter = 0;
   final TextEditingController searchController = TextEditingController();
 
   @override
@@ -88,8 +92,12 @@ class _HomePageState extends State<HomePage> {
             color: primaryColor(),
             child: Stack(
               children: [
+
                 // Filtros
-                const SizedBoxFilter(),
+                FilterButtons(
+                  genUpdate: updateGenFilter,
+                  typeUpdate: updateTypeFilter,
+                ),
 
                 // Listado de Pokemons
                 Container(
@@ -110,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   padding: const EdgeInsets.only(top: 10),
-                  child: PokemonList(captured: false, searchTerm: searchQuery),
+                  child: PokemonList(captured: false, searchTerm: searchQuery, gen: genFilter, type: typeFilter),
                 ),
               ],
             ),
@@ -122,6 +130,16 @@ class _HomePageState extends State<HomePage> {
   void updateSearchQuery(String query) {
     setState(() {
       searchQuery = query;
+    });
+  }
+  void updateGenFilter(int gen) {
+    setState(() {
+      genFilter = gen;
+    });
+  }
+  void updateTypeFilter(String type) {
+    setState(() {
+      typeFilter = type;
     });
   }
 }

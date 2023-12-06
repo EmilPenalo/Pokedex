@@ -8,7 +8,9 @@ import 'card_item.dart';
 class PokemonList extends StatefulWidget {
   final bool captured;
   final String searchTerm;
-  const PokemonList({Key? key, required this.captured, required this.searchTerm}) : super(key: key);
+  final int gen;
+  final String type;
+  const PokemonList({Key? key, required this.captured, required this.searchTerm, required this.gen, required this.type}) : super(key: key);
 
   @override
   State<PokemonList> createState() => _PokemonListState();
@@ -19,6 +21,8 @@ class _PokemonListState extends State<PokemonList> {
   final PagingController<int, Pokemon> _pagingController = PagingController(firstPageKey: 0);
 
   late String previousSearchTerm;
+  late String previousType;
+  late int previousGen;
 
   @override
   void initState() {
@@ -27,13 +31,15 @@ class _PokemonListState extends State<PokemonList> {
     });
 
     previousSearchTerm = widget.searchTerm;
+    previousGen = widget.gen;
+    previousType = widget.type;
 
     super.initState();
   }
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final List<Pokemon> newItems = await _getPokemonList(pageKey, widget.searchTerm, widget.captured, "", 0);
+      final List<Pokemon> newItems = await _getPokemonList(pageKey, widget.searchTerm, widget.captured, widget.type, widget.gen);
       final isLastPage = newItems.length < _pageSize;
 
       if (isLastPage) {
@@ -64,6 +70,12 @@ class _PokemonListState extends State<PokemonList> {
     if (previousSearchTerm != widget.searchTerm) {
       _pagingController.refresh();
       previousSearchTerm = widget.searchTerm;
+    } else if (previousType != widget.type) {
+      _pagingController.refresh();
+      previousType = widget.type;
+    } else if (previousGen != widget.gen) {
+      _pagingController.refresh();
+      previousGen = widget.gen;
     }
 
     return RefreshIndicator(

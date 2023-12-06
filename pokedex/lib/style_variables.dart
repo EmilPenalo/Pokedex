@@ -23,6 +23,23 @@ TextStyle softerTextStyle() {
   );
 }
 
+TextStyle inactiveFilterTextStyle() {
+  return TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      color: Colors.grey[600],
+  );
+}
+
+TextStyle activeFilterTextStyle() {
+  return const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w800,
+      color: Colors.white,
+      letterSpacing: 1.5
+  );
+}
+
 TextStyle subtitleTextStyle() {
   return TextStyle(
       color: Colors.grey[500],

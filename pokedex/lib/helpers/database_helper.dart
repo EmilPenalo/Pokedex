@@ -5,14 +5,28 @@ import 'package:path/path.dart';
 import '../models/pokemon.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseHelper {
   static const int _version = 1;
   static const String _dbName = "Pokemon.db";
+  static late SharedPreferences prefs;
+
+  static int genCount = 1;
+
+  static Future<void> initializePreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    genCount = prefs.getInt('genCount') ?? 1;
+  }
+
+  DatabaseHelper() {
+    initializePreferences();
+  }
 
   static Future<Database> _getDB() async {
+
     return openDatabase(join(await getDatabasesPath(), _dbName),
-      onCreate: (db, version) async => 
+      onCreate: (db, version) async =>
       await db.execute(
         "CREATE TABLE Pokemon(id INTEGER PRIMARY KEY, name TEXT NOT NULL, url TEXT NOT NULL, isCaptured BOOLEAN, type1 TEST NOT NULL, type2 TEXT, gen INTEGER);"
       ), version: _version
@@ -77,6 +91,11 @@ class DatabaseHelper {
           final String name = pokemonData['name'];
           final int gen = pokemonData['specie']['gen']['id'];
           final List<dynamic> types = pokemonData['types'];
+
+          if (gen > genCount) {
+            genCount = gen;
+            await prefs.setInt('genCount', genCount);
+          }
 
           final existingPokemon = await db.query("Pokemon",
               where: 'id = ?', whereArgs: [id]);

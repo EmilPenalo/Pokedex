@@ -41,7 +41,7 @@ class _CapturePokemonListState extends State<CapturePokemonList> {
 
             Flexible(
               fit: FlexFit.loose,
-              child: PokemonList(captured: true, searchTerm: searchQuery)
+              child: PokemonList(captured: true, searchTerm: searchQuery, gen: 0, type: "")
             )
           ],
         )
