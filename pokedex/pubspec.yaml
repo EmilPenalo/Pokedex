@@ -64,6 +64,7 @@ flutter:
   assets:
     - lib/resources/pokeball.png
     - lib/resources/pokeball_icon.svg
+    - lib/resources/pokeball_icon_outline.svg
     - lib/resources/weight.svg
     - lib/resources/ruler.svg
 

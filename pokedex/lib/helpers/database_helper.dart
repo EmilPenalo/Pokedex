@@ -14,7 +14,7 @@ class DatabaseHelper {
     return openDatabase(join(await getDatabasesPath(), _dbName),
       onCreate: (db, version) async => 
       await db.execute(
-        "CREATE TABLE Pokemon(id INTEGER PRIMARY KEY, name TEXT NOT NULL, url TEXT NOT NULL, isCaptured BOOLEAN, type1 TEST NOT NULL, type2 TEXT);"
+        "CREATE TABLE Pokemon(id INTEGER PRIMARY KEY, name TEXT NOT NULL, url TEXT NOT NULL, isCaptured BOOLEAN, type1 TEST NOT NULL, type2 TEXT, gen INTEGER);"
       ), version: _version
     );
   }
@@ -75,6 +75,7 @@ class DatabaseHelper {
         for (var pokemonData in pokemonList) {
           final int id = pokemonData['id'];
           final String name = pokemonData['name'];
+          final int gen = pokemonData['specie']['gen']['id'];
           final List<dynamic> types = pokemonData['types'];
 
           final existingPokemon = await db.query("Pokemon",
@@ -85,6 +86,7 @@ class DatabaseHelper {
                 name: name,
                 isCaptured: false,
                 id: id,
+                gen: gen,
                 type1: types[0]['type']['name'],
                 type2: types.length == 2 ? types[1]['type']['name'] : null
             );
@@ -94,6 +96,7 @@ class DatabaseHelper {
               name: name,
               isCaptured: existingPokemon[0]['isCaptured'] == 1,
               id: id,
+              gen: gen,
               type1: types[0]['type']['name'],
               type2: types.length == 2 ? types[1]['type']['name'] : null,
             );

@@ -270,7 +270,8 @@ class _PokemonInfoState extends State<PokemonDetails> {
                                                   weight: pokemonMoreInfo.weight
                                                       .toString(),
                                                   height: pokemonMoreInfo.height
-                                                      .toString()
+                                                      .toString(),
+                                                  gen: widget.pokemon.gen
                                               ),
 
                                               Padding(

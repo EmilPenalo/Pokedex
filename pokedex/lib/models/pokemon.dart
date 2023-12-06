@@ -1,15 +1,17 @@
 class Pokemon {
+  int id;
   String name;
   String url = "";
   bool isCaptured;
+  int? gen;
   String type1;
   String? type2;
-  int id;
 
   Pokemon({
     required this.id,
     required this.name,
     required this.isCaptured,
+    this.gen,
     required this.type1,
     this.type2,
   }) {
@@ -21,6 +23,7 @@ class Pokemon {
       id: json['id'] as int,
       name: json['name'] as String,
       isCaptured: (json['isCaptured'] as int) == 1,
+      gen: json['gen'] as int?,
       type1: json['type1'] as String,
       type2: json['type2'] as String?,
     );
@@ -32,6 +35,7 @@ class Pokemon {
       'name': name,
       'url': url,
       'isCaptured': isCaptured ? 1 : 0,
+      'gen': gen,
       'type1': type1,
       'type2': type2,
     };

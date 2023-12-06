@@ -85,10 +85,12 @@ Widget pokeballDecoration(BuildContext context) {
 }
 
 Widget aboutInfoItem({
-  required String imgSource,
+  String? imgSource,
   required String value,
   required String unit,
   required String text,
+  Icon? icon,
+
 
 }) {  return Expanded(
     child: Container(
@@ -98,12 +100,18 @@ Widget aboutInfoItem({
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
+                if (imgSource != null)
                 SvgPicture.asset(
                   imgSource,
                   width: 20,
                   height: 20,
                   colorFilter: ColorFilter.mode(Colors.grey[700]!, BlendMode.srcIn),
                 ),
+
+                if (icon != null)
+                icon,
+
                 const SizedBox(width: 10),
                 Text(' $value $unit',
                   style: softerTextStyle(),
@@ -123,7 +131,7 @@ Widget aboutInfoItem({
   );
 }
 
-Widget aboutInfo({required String weight, required String height}) {
+Widget aboutInfo({required String weight, required String height, int? gen}) {
   return Row(
     children: [
 
@@ -146,6 +154,24 @@ Widget aboutInfo({required String weight, required String height}) {
           unit: 'm',
           text: 'Height'
       ),
+
+      if (gen != null)
+      Container(
+        width: 1,
+        height: 70,
+        color: Colors.grey[200],
+      ),
+
+      if (gen != null)
+        aboutInfoItem(
+            icon: Icon(Icons.gamepad_outlined,
+              color: Colors.grey[600],
+              size: 22,
+            ),
+            value: "Gen",
+            unit: gen.toString(),
+            text: 'Generation'
+        ),
     ],
   );
 }
