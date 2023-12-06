@@ -263,7 +263,9 @@ class DatabaseHelper {
       whereClause += " AND gen = $gen";
     }
 
-    whereClause += " AND isCaptured = ${isCaptured ? 1 : 0}";
+    if (isCaptured) {
+      whereClause += " AND isCaptured = 1";
+    }
 
     List<Map<String, dynamic>> maps = await db.query(
       "Pokemon",
