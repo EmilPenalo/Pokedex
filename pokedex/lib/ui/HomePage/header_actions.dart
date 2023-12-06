@@ -66,17 +66,78 @@ Widget searchBar(Function(String) onSubmitted, TextEditingController searchContr
   );
 }
 
-Widget filterBars() {
+Widget filterBars(BuildContext context) {
   return Row(
     children: [
       Expanded(
+        child: GestureDetector(
+          onTap: () {
+            /*
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const FilterButton();
+              },
+            );
+
+             */
+          },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(8, 4, 4, 4),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(99)),
+            ),
+            height: 30,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    'All gens',
+                    style: softerTextStyle(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Icon(
+                    Icons.filter_alt_off,
+                    color: Colors.grey[300],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      Expanded(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          margin: const EdgeInsets.fromLTRB(4, 4, 8, 4),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(99)),
           ),
           height: 30,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'All types',
+                  style: softerTextStyle(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.filter_alt_off,
+                  color: Colors.grey[300],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/pages/loading_screen.dart';
 import 'package:pokedex/pages/pokemon_list.dart';
-import 'package:pokedex/ui/HomePage/filter_widgets.dart';
 import 'helpers/database_helper.dart';
 import 'ui/HomePage/header_widgets.dart';
 import 'style_variables.dart';
@@ -84,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             ];
           },
           body: Container(
-            padding: const EdgeInsets.only(top: 165),
+            padding: const EdgeInsets.only(top: 170),
             color: primaryColor(),
             child: Container(
               decoration: const BoxDecoration(
@@ -99,7 +98,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
       ),
-      floatingActionButton: const FilterButton()
     );
   }
 

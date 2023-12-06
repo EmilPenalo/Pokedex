@@ -109,7 +109,7 @@ Widget headerSmall(BuildContext context, Function(String) searchQuery, TextEditi
       ),
 
       searchBar(searchQuery, searchController),
-      filterBars()
+      filterBars(context)
     ],
   );
 }
@@ -118,7 +118,7 @@ Widget headerWidget(BuildContext context, Function(String) searchQuery, TextEdit
   return LayoutBuilder(
     builder: (context, constraints) {
       double top = constraints.biggest.height;
-      bool isExpanded = top > 165;
+      bool isExpanded = top > 170;
 
       return AnimatedCrossFade(
         duration: const Duration(milliseconds: 500),

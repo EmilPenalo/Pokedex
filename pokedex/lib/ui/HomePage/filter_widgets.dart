@@ -37,7 +37,7 @@ class _FilterButtonState extends State<FilterButton> {
             maxChildSize: 0.9,
             expand: false,
             builder: (BuildContext context, ScrollController scrollController) {
-              return filterSheet(scrollController, context);
+              return filterTypeSheet(scrollController, context);
             }),
         );
         }
@@ -56,7 +56,7 @@ class _FilterButtonState extends State<FilterButton> {
   }
 }
 
-Widget filterSheet(ScrollController controller, BuildContext context) {
+Widget filterTypeSheet(ScrollController controller, BuildContext context) {
   return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
       child: Column(
